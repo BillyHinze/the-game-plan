@@ -1,1 +1,1 @@
-Original code-generated animation for an HPE assessment. No club endorsement is implied. Source facts are attributed in the README. No synthetic voiceover or third-party media is included.
+Original code-generated animation, character drawings and procedural audio for an HPE assessment. No club endorsement is implied. Official factual sources are linked in the recording guide and src/data/sources.ts. No synthetic narration is included. Montserrat is used under the SIL Open Font License included at public/fonts/OFL.txt in the source download and prepared cloud artifact.

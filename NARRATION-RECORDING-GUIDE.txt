@@ -1,0 +1,54 @@
+# THE GAME PLAN — YOUR VOICE-OVER
+
+Read in your own natural voice. The supplied script is 312 words. The default cut is 2:10. Aim for about 144 words per minute, with short breaths between paragraphs. No synthetic narrator is included.
+
+[00:00.0 – 00:10.0]
+As I move into Years 11 and 12, school is going to become more demanding, and finding time to stay active could be harder.
+
+[00:10.0 – 00:14.0]
+That's why my physical activity plan focuses on basketball.
+
+[00:14.0 – 00:38.0]
+My long-term goal is to join SportUP Sunshine Coast, which runs social basketball competitions where people can stay active, meet others and have fun. However, SportUP currently requires players to be at least eighteen. So, while I'm still under eighteen, my plan is to participate in junior community basketball through Suncoast Clippers, before moving to SportUP when I'm eligible.
+
+[00:38.0 – 00:54.0]
+I aim to play one organised game each week and complete another practice session, while also staying active throughout the week. To make this possible, I'll need basketball shoes, suitable clothing, registration fees, transport and time set aside around schoolwork.
+
+[00:54.0 – 01:01.0]
+Basketball offers several health benefits. Physically, it can improve cardiovascular fitness, coordination, stamina and movement skills.
+
+[01:01.0 – 01:13.0]
+Mentally, it can help with concentration and managing stress. Emotionally, exercise can support confidence and mood. Socially, playing in a team creates opportunities for friendships, teamwork and communication.
+
+[01:13.0 – 01:29.0]
+It could also give me a greater sense of purpose, belonging and personal achievement. The Australian Government recommends that teenagers aim for at least sixty minutes of moderate-to-vigorous physical activity each day. Basketball can contribute to that goal.
+
+[01:29.0 – 01:36.0]
+However, there are also challenges. Homework, exams, costs, transport and tiredness could make regular participation difficult.
+
+[01:36.0 – 01:54.0]
+To manage these problems, I'll plan sessions around school commitments, organise transport, budget for fees and adjust training during busy exam periods. I'll evaluate the plan by tracking how regularly I participate, how my fitness develops and whether the routine helps my overall wellbeing.
+
+[01:54.0 – 02:10.0]
+Overall, basketball is a realistic way to make physical activity part of my life during senior school and beyond. It's not just about improving at sport. It's about building habits that support a healthier and more balanced future.
+
+RECORDING
+Record one MP3 in a quiet room. You can talk over the supplied MP4 in any editor, or upload your take to public/audio/voiceover.mp3 on GitHub and run the workflow with voiceover=yes. A 120–180 second recording is accepted. To place sections precisely, upload public/audio/timing.json with 11 increasing boundaries. Example:
+[0,10,14,38,54,61,73,89,96,114,130]
+
+The film already contains Foley and a quiet instrumental bed. Separate sound-effects.wav and music-bed.wav are included for mixing.
+
+SOURCES
+SportUP Sunshine Coast — FAQ (18+)
+https://sportupsunshine.com.au/faq
+
+SportUP — social basketball
+https://sportupsunshine.com.au/sports/social-basketball-sunshine-coast
+
+Suncoast Clippers — juniors & fees
+https://clippersbasketball.com.au/junior-basketball/
+
+Australian Government — activity for ages 5–17
+https://www.health.gov.au/topics/physical-activity-and-exercise/physical-activity-and-exercise-guidelines-for-all-australians/recommendations-for-children-and-young-people-5-to-17-years
+
+Facts checked 11 November 2026. SportUP is 18+; use junior basketball before eligibility. Confirm future registration fees and availability.
