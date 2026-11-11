@@ -1,0 +1,1 @@
+export type SceneProps={t:number;duration:number};

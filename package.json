@@ -1,0 +1,33 @@
+{
+  "name": "the-game-plan",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic 3D basketball infomercial rendered only on GitHub Actions",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx scripts/validate.ts",
+    "render": "tsx scripts/render.ts",
+    "qa": "tsx scripts/qa.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.360",
+    "@remotion/cli": "4.0.360",
+    "@remotion/renderer": "4.0.360",
+    "@remotion/three": "4.0.360",
+    "@react-three/fiber": "8.17.10",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.360",
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "@types/three": "0.170.0",
+    "tsx": "4.19.2",
+    "typescript": "5.7.3",
+    "sharp": "0.33.5"
+  }
+}

@@ -1,0 +1,100 @@
+name: Render The Game Plan
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Export preview (8 seconds) or final film
+        type: choice
+        options: [preview, final]
+        default: preview
+      resolution:
+        description: Output size (720p uses less runner memory)
+        type: choice
+        options: [720p, 1080p]
+        default: 720p
+      preview_fps:
+        description: Preview frame rate (final is always 30 FPS)
+        type: choice
+        options: ['15', '30']
+        default: '15'
+      voiceover:
+        description: Include public/audio/voiceover.mp3
+        type: choice
+        options: [auto, 'no', 'yes']
+        default: auto
+      captions:
+        description: Include script captions
+        type: boolean
+        default: true
+      backend:
+        description: Chromium OpenGL backend (automatic fallback enabled)
+        type: choice
+        options: [swangle, angle, swiftshader]
+        default: swangle
+  push:
+    branches: [main]
+    paths: ['src/**', 'scripts/**', 'package.json', 'tsconfig.json', 'remotion.config.ts', '.github/workflows/render.yml', 'public/audio/**']
+permissions:
+  contents: write
+concurrency:
+  group: game-plan-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 180
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+      RENDER_MODE: ${{ inputs.mode || 'final' }}
+      RESOLUTION: ${{ inputs.resolution || '720p' }}
+      PREVIEW_FPS: ${{ inputs.preview_fps || '15' }}
+      VOICEOVER: ${{ inputs.voiceover || 'auto' }}
+      CAPTIONS: ${{ github.event_name == 'workflow_dispatch' && format('{0}', inputs.captions) || 'true' }}
+      GL_BACKEND: ${{ inputs.backend || 'swangle' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Linux browser and media dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libnss3 libatk-bridge2.0-0 libgbm1 libasound2 libgtk-3-0 ffmpeg
+      - name: Resolve lock on first cloud build
+        run: |
+          if [ ! -f package-lock.json ]; then
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          fi
+      - name: Install exact dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Validate timeline, character IK and basketball paths
+        run: npm test
+      - name: Save cloud-generated dependency lock
+        run: |
+          if [ -n "$(git status --porcelain package-lock.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add package-lock.json
+            git commit -m "Lock verified animation dependencies [skip ci]"
+            git push
+          fi
+      - name: Render QA frames, smoke test and selected export
+        run: npm run render
+      - name: Verify encoded MP4 and build contact sheet
+        run: npm run qa
+      - name: Upload MP4 and QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: the-game-plan-${{ env.RENDER_MODE }}-${{ env.RESOLUTION }}
+          path: out/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Add browser download instructions
+        if: always()
+        run: |
+          echo "## The Game Plan" >> "$GITHUB_STEP_SUMMARY"
+          echo "Open this run's Summary and download the artifact below. Extract the ZIP and play the-game-plan-*.mp4. The qa folder contains frames from all ten scenes and verification results." >> "$GITHUB_STEP_SUMMARY"
+          echo "If rendering failed, inspect the first red step. Retry with 720p and swangle. The artifact may contain diagnostic frames without a completed video." >> "$GITHUB_STEP_SUMMARY"
