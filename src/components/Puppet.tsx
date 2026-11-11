@@ -73,7 +73,7 @@ export function Puppet({t,pose='idle',position=[0,0,0],color='#d76b37',outfit='c
   if(pose==='worry'||pose==='tired')hand=[torsoX+side*(pose==='worry'?111:98),torsoY+(pose==='worry'?-65:140)+Math.sin(time*3)*5];
   if(pose==='dribble'&&side===1)hand=[torsoX+179,Math.min(610,950-(.17+1.05*Math.abs(Math.cos(time*Math.PI/.62))+.15)*350)];
   if(pose==='catch'||pose==='pass')hand=[torsoX+side*55,torsoY+94+(pose==='pass'?-45*smooth(t/.45):0)];
-  if(pose==='shoot')hand=[torsoX+side*63,torsoY+72-smooth(t/.9)*325];
+  if(pose==='shoot'){const u=smooth(t/.9);hand=[torsoX+side*(55+100*Math.sqrt(Math.max(0,Math.sin(Math.PI*u)))),torsoY+72-u*325];}
   if(pose==='cheer')hand=[torsoX+side*(160+Math.sin(time*4+side)*13),torsoY-175+Math.sin(time*4+side)*20];
   if(pose==='wave'&&side===1)hand=[torsoX+150+Math.sin(time*7)*24,torsoY-78];
   if(pose==='highfive')hand=[torsoX+side*153,torsoY-135+Math.sin(time*3)*13];
@@ -82,7 +82,7 @@ export function Puppet({t,pose='idle',position=[0,0,0],color='#d76b37',outfit='c
   if(pose==='pack')hand=[torsoX+side*72,torsoY+110+Math.sin(time*4+side)*18];
   if(pose==='rope')hand=[torsoX+side*122,torsoY+151+Math.sin(time*Math.PI*4.4)*9];
   if(hands){const h=hands[side<0?0:1],dx=h[0]-position[0],dz=h[2]-position[2];hand=[300+(dx*Math.cos(angle)-dz*Math.sin(angle))*350/scale,950-(h[1]-position[1])*350/scale];}
-  const tip=limb(c,shoulder,hand,125,145,hand[1]<shoulder[1]?side:-side,10);oval(c,tip[0],tip[1],11,11,ink,false);armTips.push(tip);
+  const tip=limb(c,shoulder,hand,125,145,pose==='shoot'?side:(pose==='dribble'||(pose==='run'&&hands))?-side:hand[1]<shoulder[1]?side:-side,10);oval(c,tip[0],tip[1],11,11,ink,false);armTips.push(tip);
  }
  // Attached hand-held props are drawn at the solved hand endpoint.
  const right=armTips[1];
