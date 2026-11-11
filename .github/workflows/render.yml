@@ -80,7 +80,22 @@ jobs:
             git commit -m "Lock verified animation dependencies [skip ci]"
             git push
           fi
-      - name: Render QA frames, smoke test and selected export
+      - name: Render frames from all scenes and smoke test
+        env:
+          RENDER_PHASE: qa
+        run: npm run render
+      - name: Upload early scene frames for visual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: scene-review-${{ github.run_number }}
+          path: |
+            out/qa/
+            out/smoke-test.mp4
+            out/render-props.json
+          retention-days: 30
+      - name: Render selected MP4 export
+        env:
+          RENDER_PHASE: export
         run: npm run render
       - name: Verify encoded MP4 and build contact sheet
         run: npm run qa

@@ -1,5 +1,5 @@
 import {Beam,Box,Sphere,palette} from './Geometry';
-import {twoBone,sub,clamp,type V3} from '../animations/math';
+import {twoBone,sub,clamp,smooth,type V3} from '../animations/math';
 import {walkingFoot} from '../animations/walking';
 import {runningFoot,runningLift} from '../animations/running';
 import {dribbleHeight} from '../animations/basketball';
@@ -24,8 +24,8 @@ export function Stickman({t,action='idle',position=[0,0,0],rotation=0,color=pale
   if(action==='celebrate') return sub(celebrateHands(time,side),hips);
   if(action==='gesture'&&side===1) return sub(gestureHand(time,side),hips);
   if(action==='dribble'&&side===1) return [.57,Math.max(.94,dribbleHeight(time)+.17)-hipY,.28];
-  if(action==='shoot') {const p=clamp(time/1.3);return [side*.17,.63+.72*p,.22];}
-  if(action==='pass') return [side*.16,.5,.65];
+  if(action==='shoot') {const p=smooth(time/1.3);return [side*.17,.63+.68*p,.45];}
+  if(action==='pass') return [side*.16,.35,.28];
   if(seated) return [side*.27,.29,.55];
   if(moving) return [side*.4,.18+ .14*Math.max(0,Math.sin(time*(action==='run'?10.13:5.71)+side*Math.PI/2)),.32*Math.sin(time*(action==='run'?10.13:5.71)+side*Math.PI/2)];
   return [side*.4,.05,.03];

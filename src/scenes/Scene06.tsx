@@ -5,7 +5,7 @@ import type {SceneProps} from './types';
 export function Scene06({t}:SceneProps) {
  const calm=t>2.5;
  return <group><BasketballCourt compact/>
- <Stickman t={t} action={!calm?'deadline':t<5?'idle':'celebrate'} position={[0,0,.6]}/>
+ <Stickman t={t} action={!calm?'deadline':t<5?'jump':'celebrate'} position={[0,0,.6]}/>
  <Stickman t={t+.2} action={t<5?'pass':'celebrate'} position={[-1.5,0,.2]} color={palette.orange}/>
  <Stickman t={t+.6} action={t<5?'gesture':'celebrate'} position={[1.5,0,.2]} color={palette.blue}/>
  {!calm&&Array.from({length:5},(_,i)=><Beam key={i} a={[Math.sin(i*1.3)*.5,2.8,Math.cos(i*1.3)*.4]} b={[Math.sin(i*1.3+t)*.65,3.05,Math.cos(i*1.3+t)*.5]} color={palette.red} r={.025}/>)}

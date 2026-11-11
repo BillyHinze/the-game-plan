@@ -51,6 +51,7 @@ if(!selected||!composition) throw new Error('All Chromium WebGL backends failed.
 const common={serveUrl,composition,inputProps,chromiumOptions:{gl:selected},timeoutInMilliseconds:120000};
 const bounds=frameBoundaries(boundaries,fps);
 const samples=[0,...Array.from({length:10},(_,i)=>Math.floor((bounds[i]+bounds[i+1])/2)),composition.durationInFrames-1];
+if(process.env.RENDER_PHASE!=='export') {
 for(let i=1;i<samples.length;i++) {
  await renderStill({...common,frame:samples[i],output:'out/qa/'+String(i).padStart(2,'0')+'-frame-'+samples[i]+'.png',imageFormat:'png'});
 }
@@ -61,6 +62,8 @@ await fs.writeFile('out/qa/samples.json',JSON.stringify({samples,shotFrame,repea
 const smokeStart=bounds[4];
 await renderMedia({...common,codec:'h264',pixelFormat:'yuv420p',audioCodec:'aac',concurrency:1,crf:24,frameRange:[smokeStart,smokeStart+fps*2-1],outputLocation:'out/smoke-test.mp4'});
 console.log('Two-second 3D smoke render passed.');
+}
+if(process.env.RENDER_PHASE==='qa') process.exit(0);
 const output='out/the-game-plan-'+mode+'-'+resolution+'.mp4';
 let lastProgress=-1;
 await renderMedia({...common,codec:'h264',pixelFormat:'yuv420p',audioCodec:'aac',audioBitrate:'192k',concurrency:1,crf:mode==='preview'?25:19,
