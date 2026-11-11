@@ -45,7 +45,7 @@ export function Overlay({scene,t,duration,globalProgress,captions}:{scene:number
   </div>}
   {scene===3&&<>
    <div style={{marginTop:30,display:'flex',gap:8}}>
-    {['M','T','W','T','F','S','S'].map((d,i)=><div key={i} style={{width:68,background:i===2||i===5?P.teal:'#e1e5dd',color:i===2||i===5?P.white:P.ink,padding:'13px 0',textAlign:'center',borderRadius:9,transform:`translateY(${Math.sin(t*2-i)*3}px)`}}><div style={{fontSize:20}}>{d}</div><div style={{fontSize:24,fontWeight:800,marginTop:12}}>{i===2?'GAME':i===5?'PLAY':'MOVE'}</div></div>)}
+    {['M','T','W','T','F','S','S'].map((d,i)=><div key={i} style={{width:68,background:i===2||i===5?P.teal:'#e1e5dd',color:i===2||i===5?P.white:P.ink,padding:'13px 0',textAlign:'center',borderRadius:9,transform:`translateY(${Math.sin(t*2-i)*3}px)`}}><div style={{fontSize:20}}>{d}</div><div style={{fontSize:18,fontWeight:800,marginTop:12}}>{i===2?'GAME':i===5?'PLAY':'MOVE'}</div></div>)}
    </div>
    {detail('1 organised junior game / week',0)}
    {detail('1 extra practice · around 30–45 min',1)}

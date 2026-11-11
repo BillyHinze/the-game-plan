@@ -42,7 +42,7 @@ export function Stickman({t,action='idle',position=[0,0,0],rotation=0,color=pale
     <Sphere at={[-.085,.035,.221]} r={.024}/>
     <Sphere at={[.085,.035,.221]} r={.024}/>
     {action==='tired'?<Beam a={[-.065,-.1,.224]} b={[.065,-.1,.224]} r={.014}/>:<><Beam a={[-.07,-.065,.226]} b={[0,-.092,.239]} r={.012}/><Beam a={[0,-.092,.239]} b={[.07,-.065,.226]} r={.012}/></>}
-    <mesh position={[0,.14,0]}><sphereGeometry args={[.249,20,12,0,Math.PI*2,0,.44]}/><meshStandardMaterial color={color}/></mesh>
+    <mesh position={[0,0,0]}><sphereGeometry args={[.249,20,12,0,Math.PI*2,0,.44]}/><meshStandardMaterial color={color}/></mesh>
    </group>
    {[-1,1].map(side=>{
     const shoulder:V3=[side*.27,.7,lean];

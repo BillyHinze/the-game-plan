@@ -4,6 +4,7 @@ import {scenes} from '../scenes';
 import {CameraController} from '../components/CameraController';
 import {Overlay} from '../components/Overlay';
 import {palette} from '../components/Geometry';
+import {smooth} from '../animations/math';
 import {frameBoundaries,locateScene,type VideoProps} from '../data/timeline';
 export function MainVideo(props:VideoProps) {
  const frame=useCurrentFrame(),{fps,width,height,durationInFrames}=useVideoConfig();
@@ -19,6 +20,7 @@ export function MainVideo(props:VideoProps) {
     <Scene t={t} duration={duration}/>
    </ThreeCanvas>
   </div>
+  {scene>0&&t<.45&&<div style={{position:'absolute',left:width*.28,top:height*.06,width:stageWidth,height:height*.82,overflow:'hidden'}}><div style={{position:'absolute',inset:0,background:palette.cream,borderLeft:'8px solid '+palette.teal,transform:`translateX(${smooth(t/.45)*101}%)`}}/></div>}
   <div style={{position:'absolute',width:1920,height:1080,transform:`scale(${scale})`,transformOrigin:'top left',fontFamily:'Arial, Helvetica, sans-serif',color:palette.ink}}>
    <Overlay scene={scene} t={t} duration={duration} captions={props.captions} globalProgress={(frame+1)/durationInFrames}/>
   </div>
