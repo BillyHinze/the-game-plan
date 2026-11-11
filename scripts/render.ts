@@ -25,6 +25,7 @@ if(process.env.RENDER_PHASE==='qa'){
  await renderStill({...common,frame:0,output:'out/qa/start.png',imageFormat:'png'});
  await renderStill({...common,frame:composition.durationInFrames-1,output:'out/qa/end.png',imageFormat:'png'});
  await renderStill({...common,frame:Math.round(retime(59.95)*inputProps.fps),output:'out/qa/rim-repeat.png',imageFormat:'png'});
+ await renderMedia({...common,codec:'h264',pixelFormat:'yuv420p',crf:22,frameRange:[Math.round(retime(54)*inputProps.fps),Math.round(retime(56)*inputProps.fps)-1],outputLocation:'out/qa/motion-smoke.mp4',concurrency:1});
  process.exit(0);
 }
 const idx=Number(process.env.CHUNK_INDEX||0),total=composition.durationInFrames,chunkSize=Math.ceil(total/5);

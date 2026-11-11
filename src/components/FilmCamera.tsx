@@ -10,7 +10,7 @@ export function FilmCamera({kind,p,t}:{kind:string;p:number;t:number}){
  if(['future-game','junior-practice','drive','final-drive'].includes(kind)){
  const x=kind==='final-drive'?-1.7+p*2:kind==='drive'?-1.2+p*1.5:-.6;
  from=[x-2.2,2.5,7];to=[x+.3,1.4,0];zoom=.4;}
- if(['future-mates','junior-arrival','mates','purpose','final-team'].includes(kind)){from=[-.2,2.1,9.1];to=[0,1.25,-.1];zoom=kind==='final-team'?.8:.35;}
+ if(['future-mates','junior-arrival','mates','purpose','final-team'].includes(kind)){from=[-.2,2.1,8.1];to=[0,1.25,-.1];zoom=kind==='final-team'?.8:.35;}
  if(kind==='age-gate'){from=[.1,2.1,7.1];to=[0,1.6,0];zoom=.35;}
  if(['pathway','school-walk'].includes(kind)){from=[.3,2.1,7.5];to=[.15,1.3,-p*.4];zoom=.3;}
  if(['calendar','replan','budget','costs'].includes(kind)){from=[0,2.4,5.9];to=[0,1.5,0];zoom=.4;}

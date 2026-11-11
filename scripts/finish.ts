@@ -13,5 +13,5 @@ const mix=inputProps.voiceover?'[1:a]volume=0.85[sfx];[2:a]volume=0.7[bed];[3:a]
 args.push('-filter_complex',mix,'-map','0:v:0','-map','[a]','-c:v','copy','-c:a','aac','-b:a','192k','-ar','48000','-t',String(duration),'-movflags','+faststart',output);
 execFileSync('ffmpeg',args);
 await fs.unlink('out/video-only.mp4');
-await fs.writeFile('out/render-report.json',JSON.stringify({mode,resolution,output,fps:inputProps.fps,voiceover:inputProps.voiceover,durationSeconds:duration,shotCount:36,originalSound:true,parallelChunks:names.length},null,2));
+await fs.writeFile('out/render-report.json',JSON.stringify({mode,resolution,output,fps:inputProps.fps,voiceover:inputProps.voiceover,durationSeconds:duration,shotCount:37,originalSound:true,parallelChunks:names.length},null,2));
 console.log('Finished '+output+' with original Foley and music.');

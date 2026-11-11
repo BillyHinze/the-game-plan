@@ -10,7 +10,7 @@ import {shotAt} from '../data/shots';
 export function MainVideo(props:VideoProps){
  const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig();
  const [fontHandle]=useState(()=>delayRender('Loading licensed Montserrat font'));
- useEffect(()=>{const face=new FontFace('FilmMontserrat','url('+staticFile('fonts/Montserrat.ttf')+')',{weight:'100 900'});face.load().then(f=>{document.fonts.add(f);continueRender(fontHandle);}).catch(()=>continueRender(fontHandle));},[fontHandle]);
+ useEffect(()=>{const face=new FontFace('FilmMontserrat','url('+staticFile('fonts/Montserrat.ttf')+')',{weight:'100 900'});face.load().then(f=>{(document.fonts as FontFaceSet & {add:(font:FontFace)=>FontFaceSet}).add(f);continueRender(fontHandle);}).catch(()=>continueRender(fontHandle));},[fontHandle]);
  const b=frameBoundaries(props.boundaries,fps),scene=locateScene(frame,b),t=(frame-b[scene])/fps,duration=(b[scene+1]-b[scene])/fps,shot=shotAt(scene,t,duration);
  return <AbsoluteFill style={{background:'#d8d8cc'}}>
  <ThreeCanvas width={width} height={height} camera={{position:[0,2,6.4],fov:40}} gl={{antialias:true,alpha:false,powerPreference:'low-power'}} dpr={1}>

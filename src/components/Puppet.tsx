@@ -47,7 +47,7 @@ export function Puppet({t,pose='idle',position=[0,0,0],color='#d76b37',outfit='c
  for(const side of [-1,1]){
   const shoulder:P=[torsoX+side*68,torsoY+37];let hand:P=[torsoX+side*94,hip[1]-16];
   if(walk||run)hand=[torsoX+side*89+(Math.sin(cycle+side*Math.PI/2)*(run?65:28)),torsoY+125-Math.cos(cycle+side*Math.PI/2)*(run?35:15)];
-  if(pose==='write')hand=[torsoX+side*75+(side===1?Math.sin(time*9)*18:0),torsoY+135];
+  if(pose==='write')hand=[torsoX+side*75+(side===1?Math.sin(time*9)*18:0),torsoY+30];
   if(pose==='worry'||pose==='tired')hand=[torsoX+side*(pose==='worry'?111:98),torsoY+(pose==='worry'?18:140)+Math.sin(time*3)*5];
   if(pose==='dribble'&&side===1)hand=[torsoX+179,Math.min(610,950-(.17+1.05*Math.abs(Math.cos(time*Math.PI/.62))+.15)*350)];
   if(pose==='catch'||pose==='pass')hand=[torsoX+side*55,torsoY+94+(pose==='pass'?-45*smooth(t/.45):0)];

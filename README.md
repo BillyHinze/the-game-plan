@@ -1,5 +1,5 @@
 # The Game Plan — animated portrait film
-A 130-second, 1080 × 1920, 30 FPS H.264/AAC film for a Year 10 HPE physical activity plan. Original articulated cartoon characters in dimensional sets, 36 distinct shots, original Foley, quiet original instrumental music, short captions, and room for your own narration.
+A 130-second, 1080 × 1920, 30 FPS H.264/AAC film for a Year 10 HPE physical activity plan. Original articulated cartoon characters in dimensional sets, 37 distinct shots, original Foley, quiet original instrumental music, short captions, and room for your own narration.
 
 ## Download and record
 The delivered MP4 already has sound effects and music, with **no synthetic narrator**. Read `READ-THIS-TO-RECORD.txt` from the video artifact to record your voice. `narration.txt`, `timing.json`, `captions.srt` and separate WAV stems are included.
