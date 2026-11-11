@@ -20,7 +20,7 @@ const original=names.find(n=>n.startsWith('05-'))!;
 const a=await sharp('out/qa/'+original).raw().toBuffer(),b=await sharp('out/qa/14-determinism-repeat.png').raw().toBuffer();
 assert(a.equals(b),'Same frame rendered twice produced different pixels');
 for(const name of names) {const stats=await sharp('out/qa/'+name).stats();assert(stats.channels.some(c=>c.stdev>10),'Nearly blank QA image: '+name);}
-const thumbs=await Promise.all(names.filter(n=>!n.includes('repeat')).map(async(n,i)=>({input:await sharp('out/qa/'+n).resize(640,360).png().toBuffer(),left:(i%3)*640,top:Math.floor(i/3)*360})));
-await sharp({create:{width:1920,height:Math.ceil(thumbs.length/3)*360,channels:3,background:'#f4f1e8'}}).composite(thumbs).png().toFile('out/qa/contact-sheet.png');
+const thumbs=await Promise.all(names.filter(n=>!n.includes('repeat')).map(async(n,i)=>({input:await sharp('out/qa/'+n).resize(360,640).png().toBuffer(),left:(i%3)*360,top:Math.floor(i/3)*640})));
+await sharp({create:{width:1080,height:Math.ceil(thumbs.length/3)*640,channels:3,background:'#f4f1e8'}}).composite(thumbs).png().toFile('out/qa/contact-sheet.png');
 await fs.writeFile('out/qa/verification.json',JSON.stringify({duration,codec:video.codec_name,width:video.width,height:video.height,blackIntervals:0,deterministicFramePixels:true,representativeImages:names.length,note:'Automated checks do not replace visual review of motion, captions and composition.'},null,2));
 console.log('PASS: H.264 dimensions, duration, audio mode, video decode, no black intervals, repeated frame pixels and '+names.length+' QA stills.');

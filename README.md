@@ -1,6 +1,8 @@
 # THE GAME PLAN
 ## Staying Active Through Years 11 and 12
-An original procedural 3D basketball infomercial for Year 10 HPE. **130 seconds • 16:9 • 30 FPS final • H.264 MP4 • 720p or 1080p.**
+
+Portrait revision: full-frame 3D environments, original expressive cartoon faces, thin articulated limbs, basketball jerseys, short bold subtitles, close cameras and continuous frame-based action. Updated to the supplied visual examples.
+An original procedural 3D basketball infomercial for Year 10 HPE. **130 seconds • 9:16 portrait • 30 FPS final • H.264 MP4 • 720×1280 or 1080×1920.**
 
 [Open the render workflow](https://github.com/BillyHinze/the-game-plan/actions/workflows/render.yml)
 

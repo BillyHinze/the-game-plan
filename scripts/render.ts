@@ -29,7 +29,7 @@ if(existsSync('public/audio/timing.json')) {
  if(durationSeconds<120||durationSeconds>180) throw new Error('timing.json must end between 120 and 180 seconds.');
  if(audioDuration!==null&&audioDuration>durationSeconds) throw new Error('Audio exceeds timing.json end. Extend the last boundary or record a shorter take.');
 }
-const inputProps:VideoProps={...defaultProps,durationSeconds,boundaries,voiceover,captions:process.env.CAPTIONS!=='false',fps,width:resolution==='1080p'?1920:1280,height:resolution==='1080p'?1080:720};
+const inputProps:VideoProps={...defaultProps,durationSeconds,boundaries,voiceover,captions:process.env.CAPTIONS!=='false',fps,width:resolution==='1080p'?1080:720,height:resolution==='1080p'?1920:1280};
 await fs.mkdir('out/qa',{recursive:true});
 await fs.writeFile('out/render-props.json',JSON.stringify(inputProps,null,2));
 await ensureBrowser();

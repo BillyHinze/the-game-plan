@@ -1,100 +1,39 @@
-import {AnimatedText} from './AnimatedText';
 import {narration} from '../data/narration';
-import {palette} from './Geometry';
-import {clamp,smooth} from '../animations/math';
-const P=palette;
-const titles=[
- ['THE SENIOR SCHOOL SQUEEZE','MORE SCHOOL.','LESS FREE TIME?'],
- ['A PLAN THAT MOVES','THE GAME PLAN','Basketball + wellbeing'],
- ['SUNSHINE COAST, QUEENSLAND','START JUNIOR.','GO SOCIAL AT 18.'],
- ['MAKE ROOM FOR MOVEMENT','A WEEK','THAT WORKS.'],
- ['MOVE WITH A PURPOSE','RUN. PASS.','GET STRONGER.'],
- ['A RESET WITH YOUR MATES','LESS STRESS.','MORE CONNECTION.'],
- ['MORE THAN A SCORE','BELONGING.','PURPOSE. HABITS.'],
- ['REAL LIFE STILL HAPPENS','WHAT COULD','GET IN THE WAY?'],
- ['PLAN IT. CHECK IT. ADJUST IT.','MAKE IT','ACHIEVABLE.'],
- ['SENIOR SCHOOL & BEYOND','STAY ACTIVE.','STAY CONNECTED.'],
+import {smooth} from '../animations/math';
+const topMessages=[
+ ['YEAR 11 + 12','THE PRESSURE IS REAL'],
+ ['THE GAME PLAN','BASKETBALL + WELLBEING'],
+ ['SUNCOAST CLIPPERS','JUNIOR BASKETBALL'],
+ ['ONE GAME. ONE PRACTICE.','KEEP MOVING DAILY'],
+ ['FITNESS. COORDINATION.','STAMINA. SKILLS.'],
+ ['LESS STRESS','MORE CONFIDENCE'],
+ ['PURPOSE + BELONGING','60 MINUTES / DAY'],
+ ['HOMEWORK. COSTS. TRANSPORT.','REAL LIFE GETS BUSY'],
+ ['PLAN. BUDGET. ADJUST.','TRACK YOUR PROGRESS'],
+ ['STAY ACTIVE','BUILD HEALTHY HABITS']
 ];
-const labelStyle={fontSize:22,fontWeight:800,letterSpacing:2.4,color:P.teal};
-export function Overlay({scene,t,duration,globalProgress,captions}:{scene:number;t:number;duration:number;globalProgress:number;captions:boolean}) {
- const title=titles[scene];
- const words=narration[scene].split(' ');
- const chunks:string[]=[];for(let i=0;i<words.length;i+=12) chunks.push(words.slice(i,i+12).join(' '));
- const chunk=chunks[Math.min(chunks.length-1,Math.floor(t/duration*chunks.length))];
- const detail=(text:string,n=0,color:string=P.ink)=><AnimatedText key={text} t={t} delay={.65+n*.14} style={{fontSize:28,lineHeight:1.35,marginTop:18,color,fontWeight:650}}>{text}</AnimatedText>;
+export function Overlay({scene,t,duration,globalProgress,captions}:{scene:number;t:number;duration:number;globalProgress:number;captions:boolean}){
+ const words=narration[scene].split(' '),count=4,chunkIndex=Math.min(Math.floor(words.length/count),Math.floor(t/duration*Math.ceil(words.length/count)));
+ const phrase=words.slice(chunkIndex*count,chunkIndex*count+count).join(' ');
+ let title=topMessages[scene][t/duration>.5?1:0];
+ let sub='';
+ if(scene===2){if(t/duration>.6){title='SPORTUP • ADULT SOCIAL';sub='WHEN I TURN 18 · 18+ ONLY';}else{sub='YEARS 11–12 · UNDER 18';}}
+ if(scene===3){sub=t/duration<.5?'1 junior game / week + 30–45 min practice':'Shoes · sportswear · fees · transport · family support';}
+ if(scene===6&&t/duration>.5)sub='Moderate-to-vigorous activity · ages 5–17';
+ if(scene===8)sub=t/duration<.45?'Study first • plan lifts with a parent/carer':'Attendance + fitness + wellbeing';
+ const entrance=smooth(t/.3);
  return <>
- <div style={{position:'absolute',left:88,top:60,right:88,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-  <div style={{fontSize:20,fontWeight:900,letterSpacing:3,color:P.ink}}>THE GAME PLAN <span style={{color:P.teal,marginLeft:22,fontWeight:500}}>HPE / YEARS 11–12</span></div>
-  <div style={{fontSize:20,fontWeight:700,color:'#718082'}}>SUNSHINE COAST <span style={{marginLeft:20,color:P.ink}}>{String(scene+1).padStart(2,'0')} / 10</span></div>
+ <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(13,23,40,.22),transparent 28%,transparent 72%,rgba(13,23,40,.32))'}}/>
+ <div style={{position:'absolute',left:55,right:55,top:94,textAlign:'center',transform:`translateY(${(1-entrance)*-35}px)`,opacity:entrance}}>
+ <div style={{display:'inline-block',background:scene===7?'#e95d56':'#ffcf4d',color:'#201d28',padding:'15px 24px',border:'5px solid #251b24',borderRadius:15,fontSize:scene===8?44:46,lineHeight:1.08,fontWeight:950,boxShadow:'0 7px 0 #251b24',transform:'rotate(-1deg)'}}>{title}</div>
+ {sub&&<div style={{marginTop:20,color:'white',fontSize:32,lineHeight:1.2,fontWeight:900,WebkitTextStroke:'1.5px #1d2130',paintOrder:'stroke fill',textShadow:'0 3px 3px #111'}}>{sub}</div>}
  </div>
- <div style={{position:'absolute',left:88,top:169,width:640}}>
-  <AnimatedText t={t} style={labelStyle}>{title[0]}</AnimatedText>
-  <AnimatedText t={t} delay={.12} style={{fontSize:scene===2?64:72,lineHeight:1.02,fontWeight:950,letterSpacing:-3,marginTop:24,color:P.ink}}>{title[1]}<br/><span style={{color:scene===7?P.red:P.teal}}>{title[2]}</span></AnimatedText>
-  {scene===0&&<>{detail('Homework. Exams. Less spare time.')}{detail('My goal: keep moving through it.',1)}</>}
-  {scene===1&&<>{detail('An achievable local activity plan.')}{detail('Real movement. Real people.',1)}</>}
-  {scene===2&&<div style={{marginTop:30}}>
-   <div style={{padding:'18px 22px',borderLeft:`6px solid ${P.teal}`,background:'#fffdf7ed',borderRadius:8}}>
-    <div style={{fontSize:25,fontWeight:900}}>YEARS 11 & 12 · UNDER 18</div>
-    <div style={{fontSize:30,fontWeight:800,marginTop:6}}>Suncoast Clippers</div><div style={{fontSize:24}}>Junior community basketball</div>
-   </div>
-   <div style={{fontSize:32,color:P.teal,padding:'6px 20px'}}>↓ When I turn 18</div>
-   <div style={{padding:'18px 22px',borderLeft:`6px solid ${P.blue}`,background:'#fffdf7ed',borderRadius:8}}>
-    <div style={{fontSize:25,fontWeight:900}}>ADULTS · 18+ ONLY</div><div style={{fontSize:30,fontWeight:800,marginTop:6}}>SportUP Sunshine Coast</div><div style={{fontSize:24}}>Adult social basketball</div>
-   </div>
-   <div style={{fontSize:21,marginTop:15,color:'#5d7179'}}>Separate organisations · check junior places first</div>
-  </div>}
-  {scene===3&&<>
-   <div style={{marginTop:30,display:'flex',gap:8}}>
-    {['M','T','W','T','F','S','S'].map((d,i)=><div key={i} style={{width:68,background:i===2||i===5?P.teal:'#e1e5dd',color:i===2||i===5?P.white:P.ink,padding:'13px 0',textAlign:'center',borderRadius:9,transform:`translateY(${Math.sin(t*2-i)*3}px)`}}><div style={{fontSize:20}}>{d}</div><div style={{fontSize:18,fontWeight:800,marginTop:12}}>{i===2?'GAME':i===5?'PLAY':'MOVE'}</div></div>)}
-   </div>
-   {detail('1 organised junior game / week',0)}
-   {detail('1 extra practice · around 30–45 min',1)}
-   {detail('Daily movement + schoolwork balance',2)}
-   <div style={{fontSize:21,marginTop:18,lineHeight:1.4}}>Shoes · sportswear · ball · water<br/>Allow about 60–90 min + travel for a game.<br/>Example days; actual fixtures set by the club.</div>
-  </>}
-  {scene===4&&<>
-   {['FITNESS','COORDINATION','STAMINA','MOVEMENT SKILLS'].map((s,i)=><AnimatedText key={s} t={t} delay={i*.6+.6} style={{fontSize:28,fontWeight:800,marginTop:22,display:'flex',gap:14,alignItems:'center'}}><span style={{width:12,height:12,borderRadius:12,background:P.orange}}/>{s}</AnimatedText>)}
-  </>}
-  {scene===5&&<>
-   {detail('MENTAL · stress & concentration')}
-   {detail('EMOTIONAL · confidence & mood',1)}
-   {detail('SOCIAL · friendship & teamwork',2)}
-   <svg width="520" height="95" style={{marginTop:30}} viewBox="0 0 520 95"><path d="M5 70 C90 5 120 95 190 48 S300 18 355 45 S440 65 510 28" fill="none" stroke={P.teal} strokeWidth="6" strokeDasharray="600" strokeDashoffset={600*(1-smooth(t/3))}/><circle cx="510" cy="28" r="9" fill={P.orange}/></svg>
-  </>}
-  {scene===6&&<>
-   {t<duration*.43?<>{detail('Spiritual wellbeing: purpose, belonging')}{detail('Commitment + personal achievement',1)}</>:<>
-    <div style={{display:'flex',alignItems:'baseline',gap:18,marginTop:25}}><strong style={{fontSize:108,color:P.teal,letterSpacing:-5}}>60</strong><span style={{fontSize:36,fontWeight:800}}>MIN / DAY</span></div>
-    <div style={{fontSize:25,lineHeight:1.4,fontWeight:650}}>Moderate-to-vigorous activity<br/>Australian guidance · ages 5–17</div>
-    <div style={{fontSize:26,lineHeight:1.4,marginTop:25}}>Basketball is one part.<br/>Keep moving on the other days too.</div>
-   </>}
-  </>}
-  {scene===7&&<>
-   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginTop:36}}>
-   {['HOMEWORK + EXAMS','TRANSPORT','FEES + EQUIPMENT','TIREDNESS'].map((s,i)=><AnimatedText key={s} t={t} delay={i*.25+.6} style={{background:'#fffdf7e8',padding:20,fontSize:24,fontWeight:800,borderTop:`4px solid ${i%2?P.teal:P.red}`,borderRadius:8}}>{s}</AnimatedText>)}
-   </div>
-   {detail('Plan for the difficult weeks.',4)}
-  </>}
-  {scene===8&&<>
-   {['Plan sessions around study','Parent / carpool transport plan','Check fees + budget together','Shorter practice in exam weeks'].map((s,i)=><AnimatedText key={s} t={t} delay={i*.55+.6} style={{fontSize:26,marginTop:22,fontWeight:700}}><span style={{color:P.teal,marginRight:15}}>✓</span>{s}</AnimatedText>)}
-   <div style={{fontSize:21,lineHeight:1.45,marginTop:24,padding:18,borderRadius:8,background:'#fffdf7ee'}}>
-   Clippers listed season fee: $255 early / $290 late.<br/>BQ $91.47 + BA $5.50 if due; processing extra.<br/>Check current fees & age group with a parent/carer.
-   </div>
-   <div style={{fontSize:22,fontWeight:800,marginTop:20,color:P.teal}}>TRACK → attendance · fitness · wellbeing</div>
-  </>}
-  {scene===9&&<>
-   {detail('BUILD HEALTHY HABITS.')}
-   {detail('A realistic plan — with support and flexibility.',1)}
-   {t>duration*.63&&<AnimatedText t={t-duration*.63} style={{fontSize:21,lineHeight:1.5,marginTop:28,borderTop:'2px solid #c6d0c9',paddingTop:18}}>
-    <strong>SOURCES · checked 11 NOV 2026</strong><br/>
-    sportupsunshine.com.au/faq · 18+<br/>
-    clippersbasketball.com.au/junior-basketball<br/>
-    health.gov.au · activity guidelines, ages 5–17<br/>
-    Full links and qualifications in README.
-   </AnimatedText>}
-  </>}
- </div>
- <div style={{position:'absolute',bottom:155,left:88,color:'#64767a',fontSize:19,letterSpacing:1,fontWeight:600}}>MY PLAN · ONE GAME + ONE PRACTICE + DAILY MOVEMENT</div>
- {captions&&<div style={{position:'absolute',bottom:48,left:200,right:200,minHeight:72,display:'flex',alignItems:'center',justifyContent:'center',padding:'16px 30px',boxSizing:'border-box',borderRadius:14,color:P.white,background:P.ink,fontSize:30,lineHeight:1.25,textAlign:'center',fontWeight:550}}>{chunk}</div>}
- <div style={{position:'absolute',bottom:0,left:0,width:1920*clamp(globalProgress),height:6,background:P.teal}}/>
+ {scene===8&&t/duration>.5&&t/duration<.84&&<div style={{position:'absolute',left:80,right:80,top:330,padding:23,borderRadius:16,background:'#fffae6ed',border:'4px solid #29222a',fontSize:29,fontWeight:750,lineHeight:1.35,textAlign:'center'}}>Clippers listed season: $255 early / $290 late<br/>BQ $91.47 + BA $5.50 if due; processing extra.<br/>Check future fees with a parent/carer.</div>}
+ {scene===6&&t/duration>.55&&<div style={{position:'absolute',left:70,right:70,top:330,textAlign:'center',fontWeight:900,color:'#fff9d6',fontSize:36,WebkitTextStroke:'2px #29222a',paintOrder:'stroke fill'}}>Basketball is part of the daily goal.</div>}
+ {captions&&<div style={{position:'absolute',left:60,right:60,top:1435,textAlign:'center',fontSize:64,lineHeight:1.12,fontWeight:950,color:'white',WebkitTextStroke:'8px #211a22',paintOrder:'stroke fill',textShadow:'0 6px 0 #211a22'}}>{phrase}</div>}
+ {scene===9&&t>duration-6&&<div style={{position:'absolute',bottom:180,left:65,right:65,padding:24,textAlign:'center',color:'white',background:'#182331d9',borderRadius:18,fontSize:26,lineHeight:1.45}}>
+ <strong>SOURCES · 11 NOV 2026</strong><br/>sportupsunshine.com.au/faq · 18+<br/>clippersbasketball.com.au/junior-basketball<br/>health.gov.au · activity guidelines ages 5–17
+ </div>}
+ <div style={{position:'absolute',left:0,bottom:0,width:1080*globalProgress,height:7,background:'#ffcf4d'}}/>
  </>;
 }
