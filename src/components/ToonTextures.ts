@@ -19,8 +19,9 @@ export function faceTexture(mood:string,color:string,blink:boolean){
  if(mood==='worried'||mood==='tired'){c.fillStyle='#70c8ec';c.strokeStyle=ink;c.lineWidth=5;c.beginPath();c.moveTo(407,297);c.quadraticCurveTo(446,347,416,353);c.quadraticCurveTo(391,349,407,297);c.fill();c.stroke();}
  });
 }
-export function labelTexture(text:string,color='#fff8df',bg='#164d58'){
- return texture('label'+text+color+bg,1024,256,c=>{c.fillStyle=bg;c.fillRect(0,0,1024,256);c.strokeStyle=color;c.lineWidth=8;c.strokeRect(12,12,1000,232);c.fillStyle=color;c.textAlign='center';c.textBaseline='middle';c.font='900 '+Math.min(105,900/(text.length*.6))+'px Arial';c.fillText(text,512,128,940);});
+export function labelTexture(text:string,color='#fff8df',bg='#164d58',ratio=4){
+ const h=Math.max(96,Math.round(1024/ratio));
+ return texture('label-v2'+text+color+bg+ratio,1024,h,c=>{c.fillStyle=bg;c.fillRect(0,0,1024,h);c.strokeStyle=color;c.lineWidth=6;c.strokeRect(10,10,1004,h-20);c.fillStyle=color;c.textAlign='center';c.textBaseline='middle';c.font='900 '+Math.min(h*.55,900/(text.length*.61))+'px Arial';c.fillText(text,512,h/2,940);});
 }
 export function jerseyTexture(color:string){
  return texture('jersey'+color,256,320,c=>{c.fillStyle=color;c.fillRect(0,0,256,320);c.fillStyle='#fff5cd';c.fillRect(22,0,10,320);c.fillRect(224,0,10,320);c.textAlign='center';c.font='900 28px Arial';c.fillText('COAST',128,90);c.font='900 110px Arial';c.fillText('07',128,220);});

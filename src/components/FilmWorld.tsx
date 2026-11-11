@@ -2,13 +2,13 @@ import {BackSide} from 'three';
 import {Box,Beam,Ring} from './Geometry';
 import {texture,labelTexture} from './ToonTextures';
 export function Panel({text,position,width=2,height=.5,color='#fff4d6',bg='#1b4d54',rotation=0}:{text:string;position:[number,number,number];width?:number;height?:number;color?:string;bg?:string;rotation?:number}){
- return <mesh position={position} rotation={[0,rotation,0]}><planeGeometry args={[width,height]}/><meshBasicMaterial map={labelTexture(text,color,bg)} toneMapped={false}/></mesh>;
+ return <mesh position={position} rotation={[0,rotation,0]}><planeGeometry args={[width,height]}/><meshBasicMaterial map={labelTexture(text,color,bg,width/height)} toneMapped={false}/></mesh>;
 }
 const wood=()=>texture('film-wood',1024,1024,c=>{c.fillStyle='#dcb880';c.fillRect(0,0,1024,1024);for(let x=0;x<1024;x+=128){c.fillStyle=x%256?'#d3a76d':'#e3c08c';c.fillRect(x,0,128,1024);c.strokeStyle='#ad8252';c.lineWidth=2;c.strokeRect(x,0,128,1024);for(let y=0;y<1024;y+=256){c.beginPath();c.moveTo(x,y+(x%256));c.lineTo(x+128,y+(x%256));c.stroke();}c.strokeStyle='#c49762';c.lineWidth=1;for(let j=0;j<7;j++){c.beginPath();c.moveTo(x+14+j*14,0);c.bezierCurveTo(x+25+j*14,300,x+4+j*14,700,x+14+j*14,1024);c.stroke();}}});
 const brick=()=>texture('film-brick',1024,512,c=>{c.fillStyle='#b96c51';c.fillRect(0,0,1024,512);for(let y=0;y<512;y+=64)for(let x=-96;x<1120;x+=192){c.fillStyle=['#c57c5d','#b76b4f','#cc8464'][Math.abs((x/192+y/64)|0)%3];c.fillRect(x+(y%128?96:0)+3,y+3,186,58);c.fillStyle='rgba(255,221,173,.15)';c.fillRect(x+(y%128?96:0)+7,y+7,174,4);}});
 export function Floor({wooden=false,color='#b4bcb2'}:{wooden?:boolean;color?:string}){return <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.014,0]}><planeGeometry args={[40,40]}/><meshStandardMaterial map={wooden?wood():undefined} color={wooden?'#ffffff':color} roughness={.9}/></mesh>;}
 function Sky({night=false,sunset=false}:{night?:boolean;sunset?:boolean}){
- const map=texture('sky'+night+sunset,1024,512,c=>{const g=c.createLinearGradient(0,0,0,512);g.addColorStop(0,night?'#111b40':sunset?'#8a84c8':'#2d8ce0');g.addColorStop(.55,night?'#414f83':sunset?'#efb19a':'#9edff4');g.addColorStop(1,night?'#9ba7c4':sunset?'#ffe0b6':'#d9f0dd');c.fillStyle=g;c.fillRect(0,0,1024,512);if(night){c.fillStyle='#fff4c9';for(let i=0;i<50;i++){c.beginPath();c.arc((i*157)%1024,(i*89)%270,1.5+(i%2),0,7);c.fill();}}else{c.fillStyle=sunset?'#ffe3c8':'#ffffffbb';for(let i=0;i<9;i++){const x=i*151%1024,y=190+i%3*32;c.beginPath();c.ellipse(x,y,72,12,0,0,7);c.ellipse(x+22,y-9,37,18,0,0,7);c.fill();}}});
+ const map=texture('sky'+night+sunset,1024,512,c=>{const g=c.createLinearGradient(0,0,0,512);g.addColorStop(0,night?'#111b40':sunset?'#8a84c8':'#2d8ce0');g.addColorStop(.55,night?'#414f83':sunset?'#efb19a':'#9edff4');g.addColorStop(1,night?'#9ba7c4':sunset?'#ffe0b6':'#d9f0dd');c.fillStyle=g;c.fillRect(0,0,1024,512);if(night){c.fillStyle='#fff4c9';for(let i=0;i<50;i++){c.beginPath();c.arc((i*157)%1024,(i*89)%270,1.5+(i%2),0,7);c.fill();}}});
  return <mesh><sphereGeometry args={[65,24,16]}/><meshBasicMaterial map={map} side={BackSide} toneMapped={false} depthWrite={false}/></mesh>;
 }
 function Tree({x,z,s=1}:{x:number;z:number;s?:number}){return <group position={[x,0,z]} scale={s}><Beam a={[0,0,0]} b={[.15,2.7,0]} r={.13} color="#79543b"/>{[-.5,.3,.7].map((n,i)=><mesh key={i} position={[n,2.6+i%2*.4,0]} scale={[1,.85,.8]}><sphereGeometry args={[.85,12,10]}/><meshStandardMaterial color={['#559057','#7aae57','#438156'][i]} roughness={1}/></mesh>)}</group>;}
@@ -54,10 +54,10 @@ export function FilmWorld({env,t,calm=false}:{env:string;t:number;calm?:boolean}
  <Box at={[0,.04,.5]} size={[40,.09,1.2]} color="#d6c4a7"/>
  <House x={-4} z={-9} color="#efd5ad"/><House x={1} z={-10} color="#b4c8c5"/><House x={6} z={-9} color="#dba79b"/>
  <Tree x={-4} z={-1.4}/><Tree x={5} z={-2}/><Lamp x={-6} z={-4}/><Lamp x={5.5} z={-4}/>
- {Array.from({length:22},(_,i)=><Box key={i} at={[(i-11)*.4,.5,2]} size={[.23,1,.06]} color="#f0dfc0"/>)}
+ {Array.from({length:22},(_,i)=><Box key={i} at={[(i-11)*.4,.4,-6]} size={[.23,.8,.06]} color="#f0dfc0"/>)}
  </group>;
  if(env==='beach')return <group><Sky sunset/><Floor color="#e6cf9f"/>
- <Box at={[0,-.06,-22]} size={[90,.08,30]} color="#54bcbf"/>
+ <Box at={[0,-.006,-22]} size={[90,.008,30]} color="#54bcbf"/>
  {Array.from({length:9},(_,i)=><Box key={i} at={[0,-.008,-7-i*2+(t*.14)%1]} size={[90,.015,.07+i*.02]} color={i%2?'#c6eadb':'#8dd4cf'}/>)}
  <Box at={[0,-.005,1]} size={[24,.03,5]} color="#c49d6b"/>
  {Array.from({length:38},(_,i)=><Box key={i} at={[(i-19)*.6,.018,1]} size={[.018,.008,5]} color="#96734c"/>)}

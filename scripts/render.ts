@@ -21,10 +21,10 @@ if(process.env.RENDER_PHASE==='qa'){
  console.log('QA '+(i+1)+'/'+shots.length+' '+shot.kind);
  }
  await sharp({create:{width:1440,height:Math.ceil(shots.length/6)*426,channels:3,background:'#2d2933'}}).composite(panels).jpeg({quality:90}).toFile('out/qa/contact-sheet.jpg');
- await renderStill({...common,frame:Math.round(retime(59.95)*inputProps.fps),output:'out/qa/rim-crossing.png',imageFormat:'png'});
+ await renderStill({...common,frame:Math.round(retime(60.15)*inputProps.fps),output:'out/qa/rim-crossing.png',imageFormat:'png'});
  await renderStill({...common,frame:0,output:'out/qa/start.png',imageFormat:'png'});
  await renderStill({...common,frame:composition.durationInFrames-1,output:'out/qa/end.png',imageFormat:'png'});
- await renderStill({...common,frame:Math.round(retime(59.95)*inputProps.fps),output:'out/qa/rim-repeat.png',imageFormat:'png'});
+ await renderStill({...common,frame:Math.round(retime(60.15)*inputProps.fps),output:'out/qa/rim-repeat.png',imageFormat:'png'});
  await renderMedia({...common,codec:'h264',pixelFormat:'yuv420p',crf:22,frameRange:[Math.round(retime(54)*inputProps.fps),Math.round(retime(56)*inputProps.fps)-1],outputLocation:'out/qa/motion-smoke.mp4',concurrency:1});
  process.exit(0);
 }

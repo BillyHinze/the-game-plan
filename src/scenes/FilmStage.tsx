@@ -44,8 +44,8 @@ export function FilmStage({kind,t,p}:{kind:string;t:number;p:number}){
  if(kind==='water')return <Hero t={t} pose="drink"/>;
  if(kind==='bus')return <><Hero t={t} pose="phone" at={[-.4,0,-.4]} outfit="school" mood="worried"/><Bag at={[.3,0,-.1]}/></>;
  if(kind==='carpool')return <><Car p={p}/><Hero t={t} pose={p<.5?'wave':'walk'} at={[-.6,0,-Math.max(0,p-.5)*1.5]}/><Puppet t={t} pose="wave" position={[.85,0,-1.5]} scale={.85} color="#6385aa" hair={1}/></>;
- if(kind==='budget')return <><Desk papers={2}/><Hero t={t} pose="write" outfit="school"/><Panel text="FEES + TRANSPORT + GEAR" position={[0,2.9,-1]} width={2.8} height={.55} bg="#f0d28b" color="#524544"/></>;
- if(kind==='track'||kind==='progress')return <><Hero t={t} pose={kind==='track'?'phone':'cheer'}/><Panel text={kind==='track'?'SHOW UP · CHECK IN':'FITNESS ↑   MOOD ↑'} position={[0,3,-.4]} width={2.8} height={.5} bg="#e4cd92" color="#4a5950"/></>;
+ if(kind==='budget')return <><Desk papers={2}/><Hero t={t} pose="write" outfit="school"/></>;
+ if(kind==='track'||kind==='progress')return <><Hero t={t} pose={kind==='track'?'phone':'cheer'}/></>;
  if(kind==='pack')return <><Desk papers={1}/><Hero t={t} pose="pack" outfit="jersey"/><Bag at={[.45,1.05,.6]}/><Shoes at={[-.55,1.05,.65]}/></>;
  return <Hero t={t}/>;
 }

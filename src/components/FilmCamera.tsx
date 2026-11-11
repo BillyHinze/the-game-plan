@@ -13,11 +13,11 @@ export function FilmCamera({kind,p,t}:{kind:string;p:number;t:number}){
  if(['future-mates','junior-arrival','mates','purpose','final-team'].includes(kind)){from=[-.2,2.1,8.1];to=[0,1.25,-.1];zoom=kind==='final-team'?.8:.35;}
  if(kind==='age-gate'){from=[.1,2.1,7.1];to=[0,1.6,0];zoom=.35;}
  if(['pathway','school-walk'].includes(kind)){from=[.3,2.1,7.5];to=[.15,1.3,-p*.4];zoom=.3;}
- if(['calendar','replan','budget','costs'].includes(kind)){from=[0,2.4,5.9];to=[0,1.5,0];zoom=.4;}
+ if(['calendar','replan','budget','costs'].includes(kind)){from=[0,2.4,7.9];to=[0,1.5,0];zoom=.4;}
  if(kind==='driveway-dribble'){from=[-1.4,1.9,5.8];to=[0,1.3,0];zoom=.35;}
  if(kind==='kit'){from=[1.2,1.45,5.5];to=[.1,.85,0];zoom=.3;}
  if(kind==='pass'){from=[-.2,2,9.3];to=[0,1.35,0];zoom=.2;}
- if(['score','final-score'].includes(kind)){from=[-1,2.85,7.4];to=[2,1.9,0];zoom=.35;}
+ if(['score','final-score'].includes(kind)){from=[-1,2.85,9.3];to=[2.2,2,0];zoom=.35;}
  if(kind==='decompress'){from=[.1,2.1,5.6];to=[0,1.3,0];zoom=-.45;}
  if(kind==='confidence'){from=[.7,1.5,5.3];to=[0,1.45,0];zoom=.35;}
  if(kind==='jog'){from=[1.2,2.2,6.2-t*.8];to=[0,1.3,-t*.8];zoom=.1;}
