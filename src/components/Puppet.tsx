@@ -6,7 +6,7 @@ export type Pose='idle'|'walk'|'run'|'write'|'worry'|'dribble'|'catch'|'pass'|'s
 type P=[number,number];
 const ink='#2a2024';
 function limb(c:CanvasRenderingContext2D,root:P,end:P,a:number,b:number,bend:number,width:number){
- const dx=end[0]-root[0],dy=end[1]-root[1],raw=Math.hypot(dx,dy),d=Math.min(a+b-.1,Math.max(.1,raw)),nx=dx/(raw||1),ny=dy/(raw||1);
+ const dx=end[0]-root[0],dy=end[1]-root[1],raw=Math.hypot(dx,dy),d=Math.min(a+b-.1,Math.max(Math.abs(a-b)+.1,raw)),nx=dx/(raw||1),ny=dy/(raw||1);
  const along=(a*a-b*b+d*d)/(2*d),h=Math.sqrt(Math.max(0,a*a-along*along));
  const mid:P=[root[0]+nx*along-ny*h*bend,root[1]+ny*along+nx*h*bend],tip:P=[root[0]+nx*d,root[1]+ny*d];
  c.strokeStyle=ink;c.lineWidth=width;c.beginPath();c.moveTo(...root);c.lineTo(...mid);c.lineTo(...tip);c.stroke();
@@ -70,7 +70,7 @@ export function Puppet({t,pose='idle',position=[0,0,0],color='#d76b37',outfit='c
   const shoulder:P=[torsoX+side*68,torsoY+37];let hand:P=[torsoX+side*94,hip[1]-16];
   if(walk||run)hand=[torsoX+side*89+(Math.sin(cycle+side*Math.PI/2)*(run?65:28)),torsoY+125-Math.cos(cycle+side*Math.PI/2)*(run?35:15)];
   if(pose==='write')hand=[torsoX+side*75+(side===1?Math.sin(time*9)*18:0),torsoY+30];
-  if(pose==='worry'||pose==='tired')hand=[torsoX+side*(pose==='worry'?111:98),torsoY+(pose==='worry'?18:140)+Math.sin(time*3)*5];
+  if(pose==='worry'||pose==='tired')hand=[torsoX+side*(pose==='worry'?111:98),torsoY+(pose==='worry'?-65:140)+Math.sin(time*3)*5];
   if(pose==='dribble'&&side===1)hand=[torsoX+179,Math.min(610,950-(.17+1.05*Math.abs(Math.cos(time*Math.PI/.62))+.15)*350)];
   if(pose==='catch'||pose==='pass')hand=[torsoX+side*55,torsoY+94+(pose==='pass'?-45*smooth(t/.45):0)];
   if(pose==='shoot')hand=[torsoX+side*63,torsoY+72-smooth(t/.9)*325];
@@ -78,16 +78,16 @@ export function Puppet({t,pose='idle',position=[0,0,0],color='#d76b37',outfit='c
   if(pose==='wave'&&side===1)hand=[torsoX+150+Math.sin(time*7)*24,torsoY-78];
   if(pose==='highfive')hand=[torsoX+side*153,torsoY-135+Math.sin(time*3)*13];
   if(pose==='phone'&&side===1)hand=[torsoX+70,torsoY+65];
-  if(pose==='drink'&&side===1)hand=[torsoX+77,torsoY-40+Math.sin(time*2)*7];
+  if(pose==='drink'&&side===1)hand=[torsoX+70,torsoY-20+Math.sin(time*2)*7];
   if(pose==='pack')hand=[torsoX+side*72,torsoY+110+Math.sin(time*4+side)*18];
   if(pose==='rope')hand=[torsoX+side*122,torsoY+151+Math.sin(time*Math.PI*4.4)*9];
   if(hands){const h=hands[side<0?0:1],dx=h[0]-position[0],dz=h[2]-position[2];hand=[300+(dx*Math.cos(angle)-dz*Math.sin(angle))*350/scale,950-(h[1]-position[1])*350/scale];}
-  const tip=limb(c,shoulder,hand,125,145,side<0?1:-1,10);oval(c,tip[0],tip[1],11,11,ink,false);armTips.push(tip);
+  const tip=limb(c,shoulder,hand,125,145,hand[1]<shoulder[1]?side:-side,10);oval(c,tip[0],tip[1],11,11,ink,false);armTips.push(tip);
  }
  // Attached hand-held props are drawn at the solved hand endpoint.
  const right=armTips[1];
  if(pose==='phone'){c.save();c.translate(right[0],right[1]-20);c.rotate(-.12);c.beginPath();c.roundRect(-23,-42,46,78,8);fill(c,'#273b51');c.fillStyle='#c7ebed';c.fillRect(-16,-32,32,51);c.restore();}
- if(pose==='drink'){c.save();c.translate(right[0]+5,right[1]-30);c.rotate(-.6);c.beginPath();c.roundRect(-17,-33,34,63,9);fill(c,'#73c4ce');c.fillStyle='#183945';c.fillRect(-12,-42,24,10);c.restore();}
+ if(pose==='drink'){c.save();c.translate(right[0],right[1]);c.rotate(-1.05);c.beginPath();c.roundRect(-17,-33,34,63,9);fill(c,'#73c4ce');c.fillStyle='#183945';c.fillRect(-12,-42,24,10);c.restore();}
  if(pose==='write'){c.strokeStyle='#e5b33d';c.lineWidth=7;c.beginPath();c.moveTo(right[0]-10,right[1]-3);c.lineTo(right[0]+23,right[1]+27);c.stroke();}
 
  state.map.needsUpdate=true;

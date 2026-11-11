@@ -40,6 +40,7 @@ export function FilmWorld({env,t,calm=false}:{env:string;t:number;calm?:boolean}
  {[0,-5,-10,-15].map(z=><Box key={z} at={[0,4.65,z]} size={[1.5,.05,.5]} color="#fff4d7"/>)}<Panel text="SUNSHINE COAST HIGH" position={[0,3.7,-20.9]} width={4.5} height={.55}/>
  </group>;
  if(env==='gym'||env==='adultgym')return <group><Sky/><Floor wooden/>
+ <Box at={[0,6.1,-1]} size={[24,.15,20]} color="#ded9cb"/>
  <Box at={[0,3,-7.5]} size={[24,6,.15]} color="#f0ddbc"/><Box at={[0,1,-7.35]} size={[24,2,.08]} color="#477f8a"/>
  <Box at={[-8,3,-1]} size={[.15,6,14]} color="#d5c5aa"/>
  {[-6,-3,0,3,6].map(x=><group key={x}><Box at={[x,4.5,-7.3]} size={[2.1,1.5,.07]} color="#8fceda"/><Box at={[x,4.5,-7.2]} size={[.04,1.5,.05]} color="#f7edcf"/><Beam a={[x,5.7,-7]} b={[x,5.7,7]} r={.06} color="#848d91"/></group>)}
@@ -61,8 +62,8 @@ export function FilmWorld({env,t,calm=false}:{env:string;t:number;calm?:boolean}
  {Array.from({length:9},(_,i)=><Box key={i} at={[0,-.008,-7-i*2+(t*.14)%1]} size={[90,.015,.07+i*.02]} color={i%2?'#c6eadb':'#8dd4cf'}/>)}
  <Box at={[0,-.005,1]} size={[24,.03,5]} color="#c49d6b"/>
  {Array.from({length:38},(_,i)=><Box key={i} at={[(i-19)*.6,.018,1]} size={[.018,.008,5]} color="#96734c"/>)}
- {[-6,5].map(x=><Palm key={x} x={x} z={-3}/>)}
- <Bench position={[3,0,-1]}/><Panel text="SUNSHINE COAST" position={[-2.8,1.4,-2.8]} width={2} height={.4} bg="#ddc38d" color="#635143"/>
+ {[-2.2,2.4].map(x=><Palm key={x} x={x} z={-3}/>)}
+ <mesh position={[3,7,-25]}><sphereGeometry args={[1,24,16]}/><meshBasicMaterial color="#ffe4b1" toneMapped={false}/></mesh><Beam a={[-7,.8,-1.8]} b={[7,.8,-1.8]} r={.025} color="#947650"/>{[-2.4,2.4].map(x=><Beam key={x} a={[x,0,-1.8]} b={[x,1,-1.8]} r={.05} color="#8e6d4b"/>)}<Bench position={[3,0,-1]}/><Panel text="SUNSHINE COAST" position={[-2.8,1.4,-2.8]} width={2} height={.4} bg="#ddc38d" color="#635143"/>
  </group>;
  if(env==='rain')return <group><Sky night/><Floor color="#717f89"/>
  <Box at={[0,.06,-1]} size={[8,.12,3]} color="#a0a9a7"/><Box at={[0,2.6,-1.5]} size={[4.7,.14,2.2]} color="#597e8b"/>
