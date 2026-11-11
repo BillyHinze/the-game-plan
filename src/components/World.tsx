@@ -1,7 +1,7 @@
 import {Box,Beam,Sphere,palette} from './Geometry';
 import {labelTexture,texture} from './ToonTextures';
 export function Sign({text,position,width=3,height=.7,color='#fff2d0',bg='#164d58'}:{text:string;position:[number,number,number];width?:number;height?:number;color?:string;bg?:string}){
- return <mesh position={position}><planeGeometry args={[width,height]}/><meshBasicMaterial map={labelTexture(text,color,bg)}/></mesh>;
+ return <mesh position={position}><planeGeometry args={[width,height]}/><meshBasicMaterial toneMapped={false} map={labelTexture(text,color,bg)}/></mesh>;
 }
 function Tree({x,z,scale=1}:{x:number;z:number;scale?:number}){
  return <group position={[x,0,z]} scale={scale}><Beam a={[0,0,0]} b={[.1,2.6,0]} r={.15} color="#78513c"/>
@@ -9,7 +9,7 @@ function Tree({x,z,scale=1}:{x:number;z:number;scale?:number}){
 }
 export function Outdoor({t,sunset=false}:{t:number;sunset?:boolean}){
  return <group>
- <color attach="background" args={[sunset?'#f8b093':'#7bc9f1']}/><fog attach="fog" args={[sunset?'#f5bb98':'#9ed5e9',18,55]}/>
+
  <Box at={[0,-.22,0]} size={[100,.2,100]} color="#82b75e"/>
  <Box at={[0,-.105,3.7]} size={[100,.06,1.1]} color="#d8c5a4"/>
  {Array.from({length:14},(_,i)=><group key={i}><Tree x={(i-7)*3.7} z={-8-(i%3)*2} scale={.8+(i%3)*.18}/></group>)}
@@ -25,7 +25,7 @@ export function Outdoor({t,sunset=false}:{t:number;sunset?:boolean}){
 export function StudyRoom({t,stress=false}:{t:number;stress?:boolean}){
  const wall=stress?'#b5b4d5':'#b6cfc9';
  return <group>
- <color attach="background" args={[wall]}/>
+
  <Box at={[0,-.13,0]} size={[20,.2,20]} color="#b88758"/>
  {Array.from({length:24},(_,i)=><Box key={i} at={[(i-12)*.5,-.015,0]} size={[.015,.01,20]} color="#896443"/>)}
  <Box at={[0,2.5,-3.2]} size={[12,5,.2]} color={wall}/>

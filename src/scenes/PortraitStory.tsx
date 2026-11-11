@@ -12,7 +12,7 @@ export function PortraitStory({scene,t,duration}:{scene:number;t:number;duration
  if(scene===0)return <><StudyRoom t={t} stress/><Desk papers={3+Math.min(20,Math.floor(t*2))}/><Clock t={t}/><Stickman t={t} action={t<3?'sit':'deadline'}/></>;
  if(scene===1)return <><Outdoor t={t}/><BasketballCourt/><Stickman t={t} action="dribble" position={[0,0,0]}/><Basketball t={t} position={[.57,dribbleHeight(t),.28]}/><Stickman t={t} action="run" position={[-1.5,0,-1.5+Math.sin(t)*.6]} color="#e99435"/></>;
  if(scene===2)return <><Outdoor t={t} sunset={p>.6}/><BasketballCourt/><Sign text={p<.6?'JUNIOR BASKETBALL':'ADULT SOCIAL • 18+'} position={[0,3.6,-3.5]} width={5} height={.75}/>
- <Stickman t={t} action={t%7<4?'dribble':'pass'} position={[0,0,.5]}/><Basketball t={t} position={[.57,dribbleHeight(t),.78]}/>
+ <Stickman t={t} action="dribble" position={[0,0,.5]}/><Basketball t={t} position={[.57,dribbleHeight(t),.78]}/>
  <Stickman t={t+.3} action="gesture" position={[-1.45,0,-.25]} color="#eea13e"/><Stickman t={t+.4} action="celebrate" position={[1.45,0,-.6]} color="#7568be"/></>;
  if(scene===3){if(p<.33)return <><StudyRoom t={t}/><Desk papers={3}/><Stickman t={t} action="sit"/></>;
  return <><Outdoor t={t}/><BasketballCourt/><Stickman t={t} action="dribble"/><Basketball t={t} position={[.57,dribbleHeight(t),.28]}/><Stickman t={t} action="walk" position={[-1.5,0,-1+Math.sin(t*.5)]} color="#eea13e"/></>;}
@@ -26,6 +26,6 @@ export function PortraitStory({scene,t,duration}:{scene:number;t:number;duration
  return <><Outdoor t={t} sunset/><Box at={[0,-.03,0]} size={[40,.08,10]} color="#817b88"/><group position={[1.7,0,-1.5]}><Car/></group><Stickman t={t} action="tired"/><Sign text={p<.7?'HOW WILL I GET THERE?':'FEES + EQUIPMENT'} position={[0,3.5,-4]} width={4} height={.7}/></>;}
  if(scene===8){if(p<.45)return <><StudyRoom t={t}/><Desk papers={3}/><Stickman t={t} action="gesture"/><Sign text="STUDY • PLAY • REST" position={[0,3.35,-2.9]} width={3} height={.5}/></>;
  return <><Outdoor t={t}/><BasketballCourt/><Stickman t={t} action="dribble"/><Basketball t={t} position={[.57,dribbleHeight(t),.28]}/><Stickman t={t} action="gesture" position={[-1.4,0,-.6]} color="#eea13e"/></>;}
- const shotT=t%7;
+ const shotT=t>duration-3?5+(t-duration+3)*.4:t%7;
  return <><Outdoor t={t} sunset/><BasketballCourt/><Shot t={shotT}/><Stickman t={t} action={shotT>2.6?'celebrate':'gesture'} position={[-1.3,0,-1]} color="#eea13e"/><Stickman t={t+.3} action={shotT>2.6?'jump':'idle'} position={[1.3,0,-1]} color="#7568be"/></>;
 }

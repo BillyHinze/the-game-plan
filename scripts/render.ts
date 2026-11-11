@@ -55,7 +55,7 @@ if(process.env.RENDER_PHASE!=='export') {
 for(let i=1;i<samples.length;i++) {
  await renderStill({...common,frame:samples[i],output:'out/qa/'+String(i).padStart(2,'0')+'-frame-'+samples[i]+'.png',imageFormat:'png'});
 }
-const shotFrame=Math.round((boundaries[9]+(boundaries[10]-boundaries[9])*.35+1.3+1.25)*fps);
+const shotFrame=Math.round((boundaries[9]+1.3+1.25)*fps);
 await renderStill({...common,frame:Math.min(shotFrame,composition.durationInFrames-1),output:'out/qa/13-hoop-crossing.png',imageFormat:'png'});
 await renderStill({...common,frame:samples[5],output:'out/qa/14-determinism-repeat.png',imageFormat:'png'});
 await fs.writeFile('out/qa/samples.json',JSON.stringify({samples,shotFrame,repeatOf:samples[5]},null,2));

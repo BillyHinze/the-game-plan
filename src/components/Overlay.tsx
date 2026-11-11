@@ -13,7 +13,7 @@ const topMessages=[
  ['STAY ACTIVE','BUILD HEALTHY HABITS']
 ];
 export function Overlay({scene,t,duration,globalProgress,captions}:{scene:number;t:number;duration:number;globalProgress:number;captions:boolean}){
- const words=narration[scene].split(' '),count=4,chunkIndex=Math.min(Math.floor(words.length/count),Math.floor(t/duration*Math.ceil(words.length/count)));
+ const words=narration[scene].split(' '),count=3,chunkIndex=Math.min(Math.ceil(words.length/count)-1,Math.floor(t/duration*Math.ceil(words.length/count)));
  const phrase=words.slice(chunkIndex*count,chunkIndex*count+count).join(' ');
  let title=topMessages[scene][t/duration>.5?1:0];
  let sub='';
@@ -30,7 +30,7 @@ export function Overlay({scene,t,duration,globalProgress,captions}:{scene:number
  </div>
  {scene===8&&t/duration>.5&&t/duration<.84&&<div style={{position:'absolute',left:80,right:80,top:330,padding:23,borderRadius:16,background:'#fffae6ed',border:'4px solid #29222a',fontSize:29,fontWeight:750,lineHeight:1.35,textAlign:'center'}}>Clippers listed season: $255 early / $290 late<br/>BQ $91.47 + BA $5.50 if due; processing extra.<br/>Check future fees with a parent/carer.</div>}
  {scene===6&&t/duration>.55&&<div style={{position:'absolute',left:70,right:70,top:330,textAlign:'center',fontWeight:900,color:'#fff9d6',fontSize:36,WebkitTextStroke:'2px #29222a',paintOrder:'stroke fill'}}>Basketball is part of the daily goal.</div>}
- {captions&&<div style={{position:'absolute',left:60,right:60,top:1435,textAlign:'center',fontSize:64,lineHeight:1.12,fontWeight:950,color:'white',WebkitTextStroke:'8px #211a22',paintOrder:'stroke fill',textShadow:'0 6px 0 #211a22'}}>{phrase}</div>}
+ {captions&&<div style={{position:'absolute',left:60,right:60,top:1435,textAlign:'center',fontSize:68,lineHeight:1.12,fontWeight:950,color:'white',WebkitTextStroke:'8px #211a22',paintOrder:'stroke fill',textShadow:'0 6px 0 #211a22'}}>{phrase}</div>}
  {scene===9&&t>duration-6&&<div style={{position:'absolute',bottom:180,left:65,right:65,padding:24,textAlign:'center',color:'white',background:'#182331d9',borderRadius:18,fontSize:26,lineHeight:1.45}}>
  <strong>SOURCES · 11 NOV 2026</strong><br/>sportupsunshine.com.au/faq · 18+<br/>clippersbasketball.com.au/junior-basketball<br/>health.gov.au · activity guidelines ages 5–17
  </div>}

@@ -17,7 +17,7 @@ export function cameraAt(scene:number,t:number,duration:number):Key{
   return {p:[6,3.9,6.8],target:[ball[0]*.65,Math.max(1.2,ball[1]*.65),0],fov:49};
  }
  if(scene===9){const s=t%7;
-  if(s>1.2&&s<3.25){const ball=shotPosition(s);return {p:[ball[0]+1.4,ball[1]+1.1,5.2],target:[ball[0]*.85,Math.max(1.1,ball[1]-.15),0],fov:45};}
+  if(t<duration-3&&s>1.2&&s<3.25){const ball=shotPosition(s);return {p:[ball[0]+1.4,ball[1]+1.1,5.2],target:[ball[0]*.85,Math.max(1.1,ball[1]-.15),0],fov:45};}
   return {p:[.7+Math.sin(t*.25)*.25,2.25,5.7-m*.35],target:[0,1.3,-.2],fov:46};
  }
  if(scene===5)return {p:[.1+Math.sin(t*.2)*.3,2,5.3],target:[0,1.45,0],fov:46};

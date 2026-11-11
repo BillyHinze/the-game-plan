@@ -44,20 +44,20 @@ export function Stickman({t,action='idle',position=[0,0,0],rotation=0,color=pale
    <group position={[0,.38,lean*.5]} rotation={[0,faceAngle,0]}>
     <mesh scale={[1,1,.58]}><capsuleGeometry args={[.25,.31,6,20]}/><meshBasicMaterial color="#291d24"/></mesh>
     <mesh scale={[.89,.93,.57]} position={[0,0,.016]}><capsuleGeometry args={[.25,.31,6,20]}/><meshBasicMaterial color={color}/></mesh>
-    <mesh position={[0,0,.166]}><planeGeometry args={[.38,.52]}/><meshBasicMaterial map={jersey}/></mesh>
+    <mesh position={[0,0,.166]}><planeGeometry args={[.38,.52]}/><meshBasicMaterial map={jersey} toneMapped={false}/></mesh>
     <Box at={[0,-.28,0]} size={[.43,.17,.22]} color="#26314a"/>
    </group>
-   <Beam a={[0,.7,lean]} b={[0,.89,lean]} r={.032} color="#291d24"/>
-   <group position={[0,1.1,lean]} rotation={[0,faceAngle,action==='deadline'?.04*Math.sin(time*5):0]}>
-    <mesh><planeGeometry args={[1.02,1.12]}/><meshBasicMaterial map={face} transparent depthWrite={false}/></mesh>
+   <Beam a={[0,.67,lean-.1]} b={[0,.74,lean-.1]} r={.028} color="#291d24"/>
+   <group position={[0,1.1,lean+.22]} rotation={[0,faceAngle,action==='deadline'?.04*Math.sin(time*5):0]}>
+    <mesh><planeGeometry args={[1.02,1.12]}/><meshBasicMaterial map={face} transparent alphaTest={.05} toneMapped={false}/></mesh>
    </group>
    {[-1,1].map(side=>{
     const shoulder:V3=[side*.27,.7,lean];
     const ankle:V3=seated?[side*.2,.09,.55]:action==='run'?runningFoot(time,side):action==='walk'?walkingFoot(time,side):[side*.2,.09+jump,0];
     const hip:V3=[side*.15,0,0];
     return <group key={side}>
-     <group position={shoulder}><Limb target={sub(hand(side),shoulder)} a={.41} b={.41} pole={[side*.25,0,-1]} color={palette.ink}/></group>
-     <group position={hip}><Limb target={sub(sub(ankle,hips),hip)} a={.53} b={.53} pole={[0,0,1]} color={palette.ink} r={.032}/></group>
+     <group position={shoulder}><Limb target={sub(hand(side),shoulder)} a={.41} b={.41} pole={[side*.25,0,-1]} color="#291d24"/></group>
+     <group position={hip}><Limb target={sub(sub(ankle,hips),hip)} a={.53} b={.53} pole={[0,0,1]} color="#291d24" r={.032}/></group>
      <mesh position={[ankle[0],ankle[1]-hipY-.02,ankle[2]+.06]} scale={[.1,.045,.16]}><sphereGeometry args={[1,12,8]}/><meshBasicMaterial color="#291d24"/></mesh>
     </group>;
    })}
