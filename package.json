@@ -11,14 +11,14 @@
     "qa": "tsx scripts/qa.ts"
   },
   "dependencies": {
-    "@remotion/bundler": "4.0.360",
-    "@remotion/cli": "4.0.360",
-    "@remotion/renderer": "4.0.360",
-    "@remotion/three": "4.0.360",
+    "@remotion/bundler": "4.0.542",
+    "@remotion/cli": "4.0.542",
+    "@remotion/renderer": "4.0.542",
+    "@remotion/three": "4.0.542",
     "@react-three/fiber": "8.17.10",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "remotion": "4.0.360",
+    "remotion": "4.0.542",
     "three": "0.170.0"
   },
   "devDependencies": {
