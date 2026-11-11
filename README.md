@@ -81,7 +81,7 @@ The pipeline typechecks all source, checks every scene boundary at 15/24/30 FPS,
 
 These automated checks cannot certify aesthetic quality or exact caption alignment with a new voice take. Inspect the contact sheet and watch the MP4 before submission. See **BUILD_STATUS.md** for the checks actually observed during delivery.
 
-The linked YouTube tutorial could not be inspected during implementation. The design follows the written visual brief and uses original characters, scenes and procedural geometry rather than copying another animation.
+The linked YouTube reference was inspected through its opening visual examples and expanded workflow description. Its code-generated 3D characters, sparse facial features, staged environments and readable captions informed the production language. The tutorial's local Node/Python and synthetic-voice workflow is replaced here by GitHub-hosted rendering and your own optional recording. Characters, geometry and story scenes are original; no external engine was downloaded.
 
 ### Dependencies and rights
 This project is for a school assessment. It uses React, Three.js, React Three Fiber and Remotion. Follow their licences, including Remotion's licence terms for your use. No official organisation logos are reproduced, and no endorsement is implied.
