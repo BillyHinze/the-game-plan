@@ -1,0 +1,17 @@
+import fs from 'node:fs/promises';
+import {existsSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {inputProps,mode,resolution} from './config';
+const names=(await fs.readdir('chunks')).filter(n=>n.endsWith('.mp4')).sort();
+const expected=mode==='preview'?1:5;if(names.length!==expected)throw new Error('Missing chunks: '+names.length);
+await fs.writeFile('chunks/list.txt',names.map(n=>"file '"+n+"'").join('\n'));
+execFileSync('ffmpeg',['-y','-v','error','-f','concat','-safe','0','-i','chunks/list.txt','-c','copy','out/video-only.mp4']);
+const output='out/THE-GAME-PLAN-v2-'+resolution+'.mp4',duration=mode==='preview'?8:inputProps.durationSeconds,offset=mode==='preview'?inputProps.boundaries[4]:0;
+const args=['-y','-v','error','-i','out/video-only.mp4','-ss',String(offset),'-i','out/audio/sound-effects.wav','-ss',String(offset),'-i','out/audio/music-bed.wav'];
+if(inputProps.voiceover)args.push('-ss',String(offset),'-i','public/audio/voiceover.mp3');
+const mix=inputProps.voiceover?'[1:a]volume=0.85[sfx];[2:a]volume=0.7[bed];[3:a]loudnorm=I=-16:TP=-2:LRA=11[vo];[sfx][bed][vo]amix=inputs=3:duration=longest:normalize=0,alimiter=limit=0.94[a]':'[1:a][2:a]amix=inputs=2:duration=longest:normalize=0,alimiter=limit=0.94[a]';
+args.push('-filter_complex',mix,'-map','0:v:0','-map','[a]','-c:v','copy','-c:a','aac','-b:a','192k','-ar','48000','-t',String(duration),'-movflags','+faststart',output);
+execFileSync('ffmpeg',args);
+await fs.unlink('out/video-only.mp4');
+await fs.writeFile('out/render-report.json',JSON.stringify({mode,resolution,output,fps:inputProps.fps,voiceover:inputProps.voiceover,durationSeconds:duration,shotCount:36,originalSound:true,parallelChunks:names.length},null,2));
+console.log('Finished '+output+' with original Foley and music.');

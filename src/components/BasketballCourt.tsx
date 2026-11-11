@@ -2,8 +2,8 @@ import {Beam,Box,Ring,palette} from './Geometry';
 import {HOOP} from '../animations/basketball';
 export function BasketballCourt({compact=false}:{compact?:boolean}) {
  return <group>
- <Box at={[0,-.12,0]} size={[11,.22,7]} color="#cfb589"/>
- {Array.from({length:22},(_,i)=><Box key={i} at={[-5.25+i*.5,.002,0]} size={[.012,.005,7]} color="#b49b76"/>)}
+ <Box at={[0,-.12,0]} size={[11,.22,7]} color="#c78d52"/>
+ {Array.from({length:22},(_,i)=><Box key={i} at={[-5.25+i*.5,.002,0]} size={[.012,.005,7]} color="#af7946"/>)}
  <Box at={[0,.013,-3.1]} size={[10,.018,.035]} color={palette.white}/>
  <Box at={[0,.013,3.1]} size={[10,.018,.035]} color={palette.white}/>
  <Box at={[-5,.013,0]} size={[.035,.018,6.2]} color={palette.white}/>
@@ -11,7 +11,7 @@ export function BasketballCourt({compact=false}:{compact?:boolean}) {
  <Box at={[0,.013,0]} size={[.035,.018,6.2]} color={palette.white}/>
  <Ring at={[0,.02,0]} r={.8} tube={.022}/>
  <Ring at={[3.5,.02,0]} r={2.2} tube={.022}/>
- <Box at={[3.75,.015,0]} size={[2.5,.02,1.8]} color="#74a698"/>
+ <Box at={[3.75,.015,0]} size={[2.5,.02,1.8]} color="#4d9297"/>
  <Box at={[2.5,.03,-.9]} size={[2.5,.015,.035]} color={palette.white}/>
  <Box at={[2.5,.03,.9]} size={[2.5,.015,.035]} color={palette.white}/>
  <Box at={[1.25,.03,0]} size={[.035,.015,1.8]} color={palette.white}/>

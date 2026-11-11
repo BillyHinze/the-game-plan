@@ -1,21 +1,27 @@
-import {AbsoluteFill,Audio,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
+import {useState,useEffect} from 'react';
+import {AbsoluteFill,staticFile,useCurrentFrame,useVideoConfig,delayRender,continueRender} from 'remotion';
 import {ThreeCanvas} from '@remotion/three';
-import {PortraitStory} from '../scenes/PortraitStory';
-import {CameraController} from '../components/CameraController';
-import {Overlay} from '../components/Overlay';
+import {FilmStage} from '../scenes/FilmStage';
+import {FilmWorld} from '../components/FilmWorld';
+import {FilmCamera} from '../components/FilmCamera';
+import {FilmOverlay} from '../components/FilmOverlay';
 import {frameBoundaries,locateScene,type VideoProps} from '../data/timeline';
+import {shotAt} from '../data/shots';
 export function MainVideo(props:VideoProps){
- const frame=useCurrentFrame(),{fps,width,height,durationInFrames}=useVideoConfig();
- const b=frameBoundaries(props.boundaries,fps),scene=locateScene(frame,b),t=(frame-b[scene])/fps,duration=(b[scene+1]-b[scene])/fps;
- return <AbsoluteFill style={{background:'#7bc9f1'}}>
- <ThreeCanvas width={width} height={height} camera={{position:[.5,2.3,6],fov:46}} gl={{antialias:true,alpha:false,powerPreference:'low-power'}} dpr={1}>
- <color attach="background" args={[(scene===5||scene===6||scene===7||scene===9)?'#f7ba9c':'#7bc9f1']}/><fog attach="fog" args={['#c3e7ed',22,65]}/>
- <ambientLight intensity={1.15}/><directionalLight position={[-3,8,5]} intensity={1.9}/><directionalLight position={[4,3,-3]} intensity={.5}/>
- <CameraController scene={scene} t={t} duration={duration}/><PortraitStory scene={scene} t={t} duration={duration}/>
+ const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig();
+ const [fontHandle]=useState(()=>delayRender('Loading licensed Montserrat font'));
+ useEffect(()=>{const face=new FontFace('FilmMontserrat','url('+staticFile('fonts/Montserrat.ttf')+')',{weight:'100 900'});face.load().then(f=>{document.fonts.add(f);continueRender(fontHandle);}).catch(()=>continueRender(fontHandle));},[fontHandle]);
+ const b=frameBoundaries(props.boundaries,fps),scene=locateScene(frame,b),t=(frame-b[scene])/fps,duration=(b[scene+1]-b[scene])/fps,shot=shotAt(scene,t,duration);
+ return <AbsoluteFill style={{background:'#d8d8cc'}}>
+ <ThreeCanvas width={width} height={height} camera={{position:[0,2,6.4],fov:40}} gl={{antialias:true,alpha:false,powerPreference:'low-power'}} dpr={1}>
+ <color attach="background" args={['#a6cee0']}/>
+ <ambientLight intensity={1.5}/><directionalLight position={[-3,8,5]} intensity={1.65}/><directionalLight position={[4,3,-3]} intensity={.4}/>
+ <FilmCamera kind={shot.kind} p={shot.progress} t={shot.time}/>
+ <FilmWorld env={shot.env} t={shot.time} calm={scene>=5}/>
+ <FilmStage key={shot.kind} kind={shot.kind} t={shot.time} p={shot.progress}/>
  </ThreeCanvas>
- <div style={{position:'absolute',width:1080,height:1920,transform:`scale(${width/1080})`,transformOrigin:'top left',fontFamily:'Arial, Helvetica, sans-serif'}}>
- <Overlay scene={scene} t={t} duration={duration} captions={props.captions} globalProgress={(frame+1)/durationInFrames}/>
+ <div style={{position:'absolute',width:1080,height:1920,transform:'scale('+width/1080+')',transformOrigin:'top left',fontFamily:'FilmMontserrat, Arial, sans-serif'}}>
+ <FilmOverlay scene={scene} t={t} duration={duration} shot={shot} captions={props.captions}/>
  </div>
- {props.voiceover&&<Audio src={staticFile('audio/voiceover.mp3')}/>}
  </AbsoluteFill>;
 }

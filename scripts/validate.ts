@@ -32,3 +32,10 @@ assert(shotPosition(RELEASE+FLIGHT+.01)[1]<HOOP[1]);
 assert(shotPosition(RELEASE+FLIGHT-.01)[1]>HOOP[1]);
 assert(BALL_RADIUS<.29-.025,'Ball must fit inside rim');
 console.log('PASS: all ten scenes, 130 seconds, 15/24/30 FPS boundaries; 15,600 leg IK checks; floor, deterministic ball paths and successful hoop crossing.');
+
+import {shots,shotAt} from '../src/data/shots';
+assert.equal(shots[0].start,0);assert.equal(shots.at(-1)!.end,130);
+for(let i=1;i<shots.length;i++)assert.equal(shots[i].start,shots[i-1].end,'Gap or overlap between shots');
+assert.equal(new Set(shots.map(s=>s.kind)).size,shots.length,'Repeated shot identifier');
+for(let frame=0;frame<3900;frame++){const s=locateScene(frame,frameBoundaries(DEFAULT_BOUNDARIES,30));const shot=shotAt(s,frame/30-DEFAULT_BOUNDARIES[s],DEFAULT_BOUNDARIES[s+1]-DEFAULT_BOUNDARIES[s]);assert(shot.progress>=0&&shot.progress<1);assert(shot.time>=0);}
+console.log('PASS: '+shots.length+' distinct shots, complete timeline, valid arbitrary frame lookup.');

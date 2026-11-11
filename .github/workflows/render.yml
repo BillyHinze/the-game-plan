@@ -3,31 +3,31 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Export preview (8 seconds) or final film
+        description: Full film or an eight-second motion preview
         type: choice
-        options: [preview, final]
-        default: preview
+        options: [final, preview]
+        default: final
       resolution:
-        description: Output size (720p uses less runner memory)
+        description: Portrait export resolution
         type: choice
-        options: [720p, 1080p]
-        default: 720p
+        options: [1080p, 720p]
+        default: 1080p
       preview_fps:
-        description: Preview frame rate (final is always 30 FPS)
+        description: Preview frame rate (final is always 30)
         type: choice
-        options: ['15', '30']
-        default: '15'
+        options: ['30', '15']
+        default: '30'
       voiceover:
-        description: Include public/audio/voiceover.mp3
+        description: Include your uploaded public/audio/voiceover.mp3
         type: choice
         options: [auto, 'no', 'yes']
         default: auto
       captions:
-        description: Include script captions
+        description: Include script captions (disable for a clean edit)
         type: boolean
         default: true
       backend:
-        description: Chromium OpenGL backend (automatic fallback enabled)
+        description: WebGL renderer
         type: choice
         options: [swangle, angle, swiftshader]
         default: swangle
@@ -35,81 +35,120 @@ on:
     branches: [main]
     paths: ['src/**', 'scripts/**', 'package.json', 'tsconfig.json', 'remotion.config.ts', '.github/workflows/render.yml', 'public/audio/**']
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: game-plan-${{ github.ref }}-${{ github.sha }}
   cancel-in-progress: false
+env:
+  NODE_OPTIONS: --max-old-space-size=4096
+  RENDER_MODE: ${{ inputs.mode || 'final' }}
+  RESOLUTION: ${{ inputs.resolution || '1080p' }}
+  PREVIEW_FPS: ${{ inputs.preview_fps || '30' }}
+  VOICEOVER: ${{ inputs.voiceover || 'auto' }}
+  CAPTIONS: ${{ github.event_name == 'workflow_dispatch' && format('{0}', inputs.captions) || 'true' }}
+  GL_BACKEND: ${{ inputs.backend || 'swangle' }}
 jobs:
-  render:
+  prepare:
     runs-on: ubuntu-22.04
-    timeout-minutes: 180
-    env:
-      NODE_OPTIONS: --max-old-space-size=4096
-      RENDER_MODE: ${{ inputs.mode || 'final' }}
-      RESOLUTION: ${{ inputs.resolution || '720p' }}
-      PREVIEW_FPS: ${{ inputs.preview_fps || '15' }}
-      VOICEOVER: ${{ inputs.voiceover || 'auto' }}
-      CAPTIONS: ${{ github.event_name == 'workflow_dispatch' && format('{0}', inputs.captions) || 'true' }}
-      GL_BACKEND: ${{ inputs.backend || 'swangle' }}
+    timeout-minutes: 40
+    outputs:
+      chunks: ${{ steps.assets.outputs.chunks }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Linux browser and media dependencies
+          cache: npm
+      - name: Install cloud browser and media dependencies
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y libnss3 libatk-bridge2.0-0 libgbm1 libasound2 libgtk-3-0 ffmpeg
-      - name: Resolve lock on first cloud build
-        run: |
-          if [ ! -f package-lock.json ]; then
-            npm install --package-lock-only --ignore-scripts --no-audit --no-fund
-          fi
-      - name: Install exact dependencies
-        run: npm ci --no-audit --no-fund
-      - name: Typecheck
+      - run: npm ci --no-audit --no-fund
+      - name: Typecheck animation source
         run: npm run typecheck
-      - name: Validate timeline, character IK and basketball paths
+      - name: Validate timeline and animation invariants
         run: npm test
-      - name: Save cloud-generated dependency lock
-        run: |
-          if [ -n "$(git status --porcelain package-lock.json)" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add package-lock.json
-            git commit -m "Lock verified animation dependencies [skip ci]"
-            git push
-          fi
-      - name: Render frames from all scenes and smoke test
+      - name: Build original soundtrack and recording pack
+        id: assets
+        run: npx tsx scripts/prepare.ts
+      - name: Render all distinct shot samples
         env:
           RENDER_PHASE: qa
         run: npm run render
-      - name: Upload early scene frames for visual review
+      - name: Upload prepared assets and early visual review
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: scene-review-${{ github.run_number }}
+          name: prepared-film-${{ github.run_number }}
           path: |
-            out/qa/
-            out/smoke-test.mp4
-            out/render-props.json
+            out/
+            public/fonts/
           retention-days: 30
-      - name: Render selected MP4 export
+  render:
+    needs: prepare
+    runs-on: ubuntu-22.04
+    timeout-minutes: 70
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        chunk: ${{ fromJSON(needs.prepare.outputs.chunks) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install cloud browser dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libnss3 libatk-bridge2.0-0 libgbm1 libasound2 libgtk-3-0
+      - run: npm ci --no-audit --no-fund
+      - uses: actions/download-artifact@v4
+        with:
+          name: prepared-film-${{ github.run_number }}
+          path: .
+      - name: Render continuous frame range
         env:
-          RENDER_PHASE: export
+          CHUNK_INDEX: ${{ matrix.chunk }}
         run: npm run render
-      - name: Verify encoded MP4 and build contact sheet
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.chunk }}-${{ github.run_number }}
+          path: chunks/*.mp4
+          retention-days: 7
+  finish:
+    needs: [prepare, render]
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - uses: actions/download-artifact@v4
+        with:
+          name: prepared-film-${{ github.run_number }}
+          path: .
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: frames-*-${{ github.run_number }}
+          merge-multiple: true
+          path: chunks
+      - name: Join exact frames and mix soundtrack
+        run: npx tsx scripts/finish.ts
+      - name: Verify encoded picture, motion and sound
         run: npm run qa
-      - name: Upload MP4 and QA evidence
+      - name: Package the finished film and recording sources
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: the-game-plan-${{ env.RENDER_MODE }}-${{ env.RESOLUTION }}
+          name: THE-GAME-PLAN-v2-${{ env.RESOLUTION }}
           path: out/
-          if-no-files-found: error
           retention-days: 30
-      - name: Add browser download instructions
-        if: always()
-        run: |
-          echo "## The Game Plan" >> "$GITHUB_STEP_SUMMARY"
-          echo "Open this run's Summary and download the artifact below. Extract the ZIP and play the-game-plan-*.mp4. The qa folder contains frames from all ten scenes and verification results." >> "$GITHUB_STEP_SUMMARY"
-          echo "If rendering failed, inspect the first red step. Retry with 720p and swangle. The artifact may contain diagnostic frames without a completed video." >> "$GITHUB_STEP_SUMMARY"
+      - run: |
+          echo "## Your finished video" >> "$GITHUB_STEP_SUMMARY"
+          echo "Download THE-GAME-PLAN-v2 below. The ZIP includes the MP4 with Foley and music, the narration script, timing, captions, separate audio stems and visual QA. Upload your own voiceover.mp3 and run again to add your voice. No local terminal or installation is needed." >> "$GITHUB_STEP_SUMMARY"
