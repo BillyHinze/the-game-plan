@@ -48,8 +48,8 @@ export function Stickman({t,action='idle',position=[0,0,0],rotation=0,color=pale
     <Box at={[0,-.28,0]} size={[.43,.17,.22]} color="#26314a"/>
    </group>
    <Beam a={[0,.67,lean-.1]} b={[0,.74,lean-.1]} r={.028} color="#291d24"/>
-   <group position={[0,1.1,lean+.22]} rotation={[0,faceAngle,action==='deadline'?.04*Math.sin(time*5):0]}>
-    <mesh><planeGeometry args={[1.02,1.12]}/><meshBasicMaterial map={face} transparent alphaTest={.05} toneMapped={false}/></mesh>
+   <group position={[0,1.1,lean*.5]} rotation={[0,faceAngle,action==='deadline'?.04*Math.sin(time*5):0]}>
+    <mesh position={[0,0,.22]}><planeGeometry args={[1.02,1.12]}/><meshBasicMaterial map={face} transparent alphaTest={.05} toneMapped={false}/></mesh>
    </group>
    {[-1,1].map(side=>{
     const shoulder:V3=[side*.27,.7,lean];

@@ -68,6 +68,6 @@ const output='out/the-game-plan-'+mode+'-'+resolution+'.mp4';
 let lastProgress=-1;
 await renderMedia({...common,codec:'h264',pixelFormat:'yuv420p',audioCodec:'aac',audioBitrate:'192k',concurrency:1,crf:mode==='preview'?25:19,
  frameRange:mode==='preview'?[bounds[4],Math.min(bounds[4]+fps*8-1,composition.durationInFrames-1)]:undefined,
- outputLocation:output,onProgress:({progress})=>{const p=Math.floor(progress*10)*10;if(p!==lastProgress){lastProgress=p;console.log('Render '+p+'%');}}});
+ outputLocation:output,concurrency:resolution==='720p'?2:1,onProgress:({progress})=>{const p=Math.floor(progress*10)*10;if(p!==lastProgress){lastProgress=p;console.log('Render '+p+'%');}}});
 await fs.writeFile('out/render-report.json',JSON.stringify({mode,resolution,fps,backend:selected,output,voiceover,audioDuration,durationSeconds,sceneCount:10,samples},null,2));
 console.log('Completed '+output);
