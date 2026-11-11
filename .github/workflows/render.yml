@@ -37,8 +37,8 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: game-plan-${{ github.ref }}
-  cancel-in-progress: true
+  group: game-plan-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
 jobs:
   render:
     runs-on: ubuntu-22.04
