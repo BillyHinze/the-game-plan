@@ -4,6 +4,8 @@
 Portrait revision: full-frame 3D environments, original expressive cartoon faces, thin articulated limbs, basketball jerseys, short bold subtitles, close cameras and continuous frame-based action. Updated to the supplied visual examples.
 An original procedural 3D basketball infomercial for Year 10 HPE. **130 seconds • 9:16 portrait • 30 FPS final • H.264 MP4 • 720×1280 or 1080×1920.**
 
+**Completed film:** [130-second portrait export and QA evidence](https://github.com/BillyHinze/the-game-plan/actions/runs/42961539216). See [DELIVERY.md](DELIVERY.md) for the shortest download guide.
+
 [Open the render workflow](https://github.com/BillyHinze/the-game-plan/actions/workflows/render.yml)
 
 Everything installs, validates and renders on GitHub-hosted runners. You only use the GitHub website. No Terminal, local Node, npm, Python, Codespaces terminal or paid rendering service is required.
@@ -21,7 +23,7 @@ Everything installs, validates and renders on GitHub-hosted runners. You only us
 10. Open the downloaded ZIP in Finder. Play **the-game-plan-final-720p.mp4** in QuickTime or upload that MP4 for your assessment. **smoke-test.mp4** is a separate two-second diagnostic.
 11. Open **qa/contact-sheet.png**, the individual PNGs and **qa/verification.json** to review the scene frames and export checks. Artifacts are retained for 30 days; download a copy.
 
-A source-code push automatically starts a complete silent/auto-audio 720p render. Manual runs let you select settings. New runs on the same branch cancel older runs to conserve runner time. Public repositories normally use standard hosted runners without consuming private-repository included minutes; GitHub account limits still apply.
+A source-code push automatically starts a complete silent/auto-audio 720p render. Manual runs let you select settings. Runs are isolated by commit and never cancel a running export. This prevents delayed push events for older commits from interrupting the current film. Public repositories normally use standard hosted runners without consuming private-repository included minutes; GitHub account limits still apply.
 
 ### Your narration
 No synthetic narration, third-party soundtrack, external images or remote runtime assets are used. All geometry is generated in code.
@@ -62,7 +64,8 @@ Evaluate participation, a simple repeated fitness measure and a weekly wellbeing
 - **src/components/BasketballCourt.tsx**: 3D floor, markings, backboard, rim, net, scoreboard, bleachers and minimal coastal scenery.
 - **src/scenes/**: ten complete animated story beats. Passing, dribbling, running, shooting, planning and team interaction.
 - **CameraController.tsx**: deterministic scene-specific pans, dollies, tracking, elevated framing and shot close-up.
-- **Overlay.tsx**: SVG/CSS labels, calendar, wellbeing indicators, captions, age pathway and source credits.
+- **Overlay.tsx**: portrait-safe headline labels, short outlined captions, costs, age eligibility and source credits.
+- **World.tsx / ToonTextures.ts**: original 3D school/court environments and code-drawn cartoon faces, jerseys, calendar and signs.
 - **timeline.ts / narration.ts**: one frame-boundary map and the supplied script. Timeline was adapted for narration; it is not the original storyboard's exact timestamp list.
 - **scripts/render.ts**: bundle, browser install, backend probe/fallback, all scene stills, smoke test, MP4 export.
 - **scripts/validate.ts / qa.ts**: temporal, kinematic and encoded-media checks.
@@ -72,14 +75,14 @@ No random numbers, delta-time integration, live physics, timers, useFrame motion
 ### Cloud reliability and failures
 Remotion packages use the same exact version. A first cloud run resolves **package-lock.json** and commits it after typecheck and tests pass; later runs use **npm ci** against that lock. No lockfile is fabricated by hand.
 
-The default backend is **swangle** (SwiftShader through ANGLE), appropriate for CPU-only hosted runners. The first rendered frame probes it; if it fails, the script tries **swiftshader**. You may explicitly try **angle** in the form; it also falls back. Backend success is written to **out/render-report.json**. These alternatives must pass an actual render before being treated as working on your runner.
+The default backend is **swangle** (SwiftShader through ANGLE), appropriate for CPU-only hosted runners. The first rendered frame probes it; if it fails, the script tries **swiftshader**. You may explicitly try **angle** in the form; it also falls back. Backend success is written to **out/render-report.json**. The 1080p preview test on 11 November 2026 deliberately requested swiftshader. It could not create a WebGL context, then automatically recovered using swangle and completed the export. Use swangle on this runner; standalone swiftshader is not a working backend here.
 
-Rendering uses **one browser page at a time**, device pixel ratio 1, moderate geometry, fake contact shadows and a 4 GB Node heap. If a 1080p job exhausts memory, select **720p** in Run workflow and retry; no source rewrite is needed. A failed render does not pretend to create a video. Diagnostic artifacts are uploaded even on failure; the full MP4 exists only when the rendering step completes.
+The complete 720p export uses **two browser pages**, while 1080p exports and smoke tests use **one page**. Device pixel ratio is 1, with moderate geometry, simple contact shadows and a 4 GB Node heap. If a 1080p job exhausts memory, select **720p** in Run workflow and retry; no source rewrite is needed. A failed render does not pretend to create a video. Diagnostic artifacts are uploaded even on failure; the full MP4 exists only when the rendering step completes.
 
 If installation fails, inspect the dependency step. If narration is missing or outside the allowed duration, fix the file or choose **no**. If GitHub disables Actions, enable Actions in the repository and retry. The first lockfile commit requires the workflow's contents-write permission; if the repository policy blocks it, an owner must allow that repository workflow permission.
 
 ### Validation scope
-The pipeline typechecks all source, checks every scene boundary at 15/24/30 FPS, exercises limb reach across the full default timeline, verifies ball/floor and hoop crossing, renders frames from all ten scenes plus beginning/end and the shot, and checks repeated-frame pixel equality. It then renders a two-second smoke test and the selected export. ffprobe/ffmpeg verify codec, dimensions, duration, AAC when narration is used, decodability and no near-total black intervals.
+The pipeline typechecks all source, checks every scene boundary at 15/24/30 FPS, exercises limb reach across the full default timeline, verifies ball/floor and hoop crossing, renders frames from all ten scenes plus beginning/end and the shot, and checks repeated-frame pixel equality. It then renders a two-second smoke test and the selected export. ffprobe/ffmpeg verify codec, dimensions, duration, AAC when narration is used, decodability, exact encoded frame count, four changing motion sequences and no near-total black intervals. The motion-sequences.png sheet is extracted from the encoded MP4.
 
 These automated checks cannot certify aesthetic quality or exact caption alignment with a new voice take. Inspect the contact sheet and watch the MP4 before submission. See **BUILD_STATUS.md** for the checks actually observed during delivery.
 
